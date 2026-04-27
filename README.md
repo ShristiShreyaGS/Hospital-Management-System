@@ -155,7 +155,9 @@ Bill.js
 Department.js
 
 ### Routes & Controllers Complete
-✅ authController.js (register, login)
-✅ authRoutes.js
-✅ Tested register API - working
-✅ Tested login API - working (returns JWT token)
+authController.js (register, login)
+authRoutes.js Tested register API - working
+Tested login API - working (returns JWT token)
+
+authMiddleware.js - JWT protection working
+Protected route tested in Postman

@@ -1,0 +1,62 @@
+const Bed = require('../models/Bed');
+
+const addBed = async (req, res) => {
+  try {
+    const { bedNumber, ward, room } = req.body;
+
+    const bedExists = await Bed.findOne({ bedNumber });
+    if (bedExists) {
+      return res.status(400).json({ message: 'Bed already exists' });
+    }
+
+    const bed = await Bed.create({ bedNumber, ward, room });
+    res.status(201).json({ message: 'Bed added successfully', bed });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getAllBeds = async (req, res) => {
+  try {
+    const beds = await Bed.find().populate('patientId');
+    res.status(200).json(beds);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getAvailableBeds = async (req, res) => {
+  try {
+    const beds = await Bed.find({ status: 'Available' });
+    res.status(200).json(beds);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const updateBed = async (req, res) => {
+  try {
+    const bed = await Bed.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!bed) {
+      return res.status(404).json({ message: 'Bed not found' });
+    }
+    res.status(200).json({ message: 'Bed updated successfully', bed });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const deleteBed = async (req, res) => {
+  try {
+    const bed = await Bed.findByIdAndDelete(req.params.id);
+    if (!bed) {
+      return res.status(404).json({ message: 'Bed not found' });
+    }
+    res.status(200).json({ message: 'Bed deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { addBed, getAllBeds, getAvailableBeds, updateBed, deleteBed };
