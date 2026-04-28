@@ -32,6 +32,24 @@ app.use('/api/admissions', addmissionRoutes);
 const bedRoutes = require('./routes/bedRoutes');
 app.use('/api/beds', bedRoutes);
 
+const emrRoutes = require('./routes/emrRoutes');
+app.use('/api/emrs', emrRoutes);
+
+const labRoutes = require('./routes/labRoutes');
+app.use('/api/labs', labRoutes);
+
+const pharmacyRoutes = require('./routes/pharmacyRoutes');
+app.use('/api/pharmacies', pharmacyRoutes);
+
+const staffRoutes = require('./routes/staffRoutes');
+app.use('/api/staff', staffRoutes);
+
+const reviewRoutes = require('./routes/reviewRoutes');
+app.use('/api/reviews', reviewRoutes);
+
+const notificationRoutes = require('./routes/notificationRoutes');
+app.use('/api/notifications', notificationRoutes);
+
 app.get('/', (req, res) => {
   res.json({ message: 'HMS API is running...' });
 });
