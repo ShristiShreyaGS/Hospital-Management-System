@@ -3,7 +3,7 @@ const Patient = require('../models/Patient');
 // Add new patient
 const addPatient = async (req, res) => {
   try {
-    const { userId, age, previousRecords, emergencyContact, contactNumber, currentHealthStatus } = req.body;
+    const { userId, age, gender, bloodGroup, allergies, address, emergencyContact, contactNumber, currentHealthStatus } = req.body;
 
     const patientExists = await Patient.findOne({ userId });
     if (patientExists) {
@@ -13,7 +13,10 @@ const addPatient = async (req, res) => {
     const patient = await Patient.create({
       userId,
       age,
-      previousRecords,
+      gender,
+      bloodGroup,
+      allergies,
+      address,
       emergencyContact,
       contactNumber,
       currentHealthStatus
