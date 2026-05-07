@@ -13,9 +13,9 @@ const { authorize } = require('../middlewares/roleMiddleware');
 
 router.use(protect);
 router.post('/', authorize('admin', 'receptionist'), addPatient);
-router.get('/', authorize('admin', 'receptionist', 'doctor', 'nurse'), getAllPatients);
-router.get('/:id', authorize('admin', 'receptionist', 'doctor', 'nurse'), getPatientById);
-router.put('/:id', authorize('doctor', 'nurse'), updatePatient);
+router.get('/', authorize('admin', 'receptionist', 'doctor', 'nurse', 'patient'), getAllPatients);
+router.get('/:id', authorize('admin', 'receptionist', 'doctor', 'nurse', 'patient'), getPatientById);
+router.put('/:id', authorize('admin', 'receptionist', 'doctor', 'nurse'), updatePatient);
 router.delete('/:id', authorize('admin'), deletePatient);
 
 module.exports = router;

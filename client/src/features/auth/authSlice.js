@@ -3,7 +3,7 @@ import axios from 'axios'
 
 const API = 'http://localhost:5000/api'
 
-// Login thunk
+// Login
 export const loginUser = createAsyncThunk('auth/login', async (formData, thunkAPI) => {
   try {
     const res = await axios.post(`${API}/auth/login`, formData)
@@ -14,7 +14,16 @@ export const loginUser = createAsyncThunk('auth/login', async (formData, thunkAP
   }
 })
 
-// Slice
+// Register Patient
+export const registerUser = createAsyncThunk('auth/register', async (formData, thunkAPI) => {
+  try {
+    const res = await axios.post(`${API}/auth/register`, formData)
+    return res.data
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err.response.data.message)
+  }
+})
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -22,6 +31,7 @@ const authSlice = createSlice({
     token: localStorage.getItem('token') || null,
     isLoading: false,
     error: null,
+    registerSuccess: false,
   },
   reducers: {
     logout: (state) => {
@@ -29,9 +39,13 @@ const authSlice = createSlice({
       state.token = null
       localStorage.removeItem('token')
     },
+    clearRegisterSuccess: (state) => {
+      state.registerSuccess = false
+    }
   },
   extraReducers: (builder) => {
     builder
+      // Login
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true
         state.error = null
@@ -45,8 +59,22 @@ const authSlice = createSlice({
         state.isLoading = false
         state.error = action.payload
       })
+      // Register
+      .addCase(registerUser.pending, (state) => {
+        state.isLoading = true
+        state.error = null
+        state.registerSuccess = false
+      })
+      .addCase(registerUser.fulfilled, (state) => {
+        state.isLoading = false
+        state.registerSuccess = true
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.isLoading = false
+        state.error = action.payload
+      })
   },
 })
 
-export const { logout } = authSlice.actions
+export const { logout, clearRegisterSuccess } = authSlice.actions
 export default authSlice.reducer

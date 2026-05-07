@@ -6,6 +6,7 @@ function PatientForm({ patientToEdit, onClose }) {
   const dispatch = useDispatch()
 
   const [formData, setFormData] = useState({
+    userId: '',
     age: '',
     gender: '',
     bloodGroup: '',
@@ -19,6 +20,7 @@ function PatientForm({ patientToEdit, onClose }) {
   useEffect(() => {
     if (patientToEdit) {
       setFormData({
+        userId: patientToEdit.userId?._id || '',
         age: patientToEdit.age || '',
         gender: patientToEdit.gender || '',
         bloodGroup: patientToEdit.bloodGroup || '',
@@ -45,6 +47,22 @@ function PatientForm({ patientToEdit, onClose }) {
     onClose()
   }
 
+  const inputStyle = {
+    width: '100%',
+    padding: '8px',
+    border: '1px solid #bdc3c7',
+    borderRadius: '4px',
+    boxSizing: 'border-box',
+    marginBottom: '12px'
+  }
+
+  const labelStyle = {
+    display: 'block',
+    marginBottom: '4px',
+    color: '#2c3e50',
+    fontWeight: '500'
+  }
+
   return (
     <div style={{
       position: 'fixed', top: 0, left: 0,
@@ -56,71 +74,147 @@ function PatientForm({ patientToEdit, onClose }) {
       <div style={{
         background: 'white', padding: '30px',
         borderRadius: '8px', width: '500px',
-        maxHeight: '80vh', overflowY: 'auto'
+        maxHeight: '85vh', overflowY: 'auto'
       }}>
-        <h3>{patientToEdit ? 'Edit Patient' : 'Add Patient'}</h3>
+        <h3 style={{ color: '#2c3e50', marginBottom: '20px' }}>
+          {patientToEdit ? 'Edit Patient' : 'Add Patient'}
+        </h3>
+
         <form onSubmit={handleSubmit}>
-          {[
-            { label: 'Age', name: 'age', type: 'number' },
-            { label: 'Blood Group', name: 'bloodGroup', type: 'text' },
-            { label: 'Allergies', name: 'allergies', type: 'text' },
-            { label: 'Address', name: 'address', type: 'text' },
-            { label: 'Contact Number', name: 'contactNumber', type: 'text' },
-            { label: 'Emergency Contact', name: 'emergencyContact', type: 'text' },
-            { label: 'Current Health Status', name: 'currentHealthStatus', type: 'text' },
-          ].map((field) => (
-            <div key={field.name} style={{ marginBottom: '12px' }}>
-              <label style={{ display: 'block', marginBottom: '4px', color: '#2c3e50' }}>
-                {field.label}
-              </label>
-              <input
-                type={field.type}
-                name={field.name}
-                value={formData[field.name]}
-                onChange={handleChange}
-                style={{
-                  width: '100%', padding: '8px',
-                  border: '1px solid #bdc3c7',
-                  borderRadius: '4px', boxSizing: 'border-box'
-                }}
-              />
-            </div>
-          ))}
-          <div style={{ marginBottom: '12px' }}>
-            <label style={{ display: 'block', marginBottom: '4px', color: '#2c3e50' }}>
-              Gender
-            </label>
-            <select
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              style={{
-                width: '100%', padding: '8px',
-                border: '1px solid #bdc3c7',
-                borderRadius: '4px'
-              }}>
-              <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
+
+          {/* User ID */}
+          <label style={labelStyle}>User ID</label>
+          <input
+            type="text"
+            name="userId"
+            value={formData.userId}
+            onChange={handleChange}
+            placeholder="Paste registered user ID here"
+            required
+            style={inputStyle}
+          />
+
+          {/* Age */}
+          <label style={labelStyle}>Age</label>
+          <input
+            type="number"
+            name="age"
+            value={formData.age}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+
+          {/* Gender */}
+          <label style={labelStyle}>Gender</label>
+          <select
+            name="gender"
+            value={formData.gender}
+            onChange={handleChange}
+            required
+            style={inputStyle}>
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+
+          {/* Blood Group */}
+          <label style={labelStyle}>Blood Group</label>
+          <select
+            name="bloodGroup"
+            value={formData.bloodGroup}
+            onChange={handleChange}
+            style={inputStyle}>
+            <option value="">Select Blood Group</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+          </select>
+
+          {/* Allergies */}
+          <label style={labelStyle}>Allergies</label>
+          <input
+            type="text"
+            name="allergies"
+            value={formData.allergies}
+            onChange={handleChange}
+            placeholder="None or list allergies"
+            style={inputStyle}
+          />
+
+          {/* Address */}
+          <label style={labelStyle}>Address</label>
+          <input
+            type="text"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            style={inputStyle}
+          />
+
+          {/* Contact Number */}
+          <label style={labelStyle}>Contact Number</label>
+          <input
+            type="text"
+            name="contactNumber"
+            value={formData.contactNumber}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+
+          {/* Emergency Contact */}
+          <label style={labelStyle}>Emergency Contact</label>
+          <input
+            type="text"
+            name="emergencyContact"
+            value={formData.emergencyContact}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+
+          {/* Current Health Status */}
+          <label style={labelStyle}>Current Health Status</label>
+          <select
+            name="currentHealthStatus"
+            value={formData.currentHealthStatus}
+            onChange={handleChange}
+            style={inputStyle}>
+            <option value="">Select Status</option>
+            <option value="Good">Good</option>
+            <option value="Fair">Fair</option>
+            <option value="Critical">Critical</option>
+            <option value="Stable">Stable</option>
+            <option value="Under Observation">Under Observation</option>
+          </select>
+
+          {/* Buttons */}
           <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
             <button type="submit" style={{
               flex: 1, padding: '10px',
               background: '#27ae60', color: 'white',
-              border: 'none', borderRadius: '4px', cursor: 'pointer'
+              border: 'none', borderRadius: '4px', cursor: 'pointer',
+              fontWeight: '600'
             }}>
               {patientToEdit ? 'Update Patient' : 'Add Patient'}
             </button>
             <button type="button" onClick={onClose} style={{
               flex: 1, padding: '10px',
               background: '#e74c3c', color: 'white',
-              border: 'none', borderRadius: '4px', cursor: 'pointer'
+              border: 'none', borderRadius: '4px', cursor: 'pointer',
+              fontWeight: '600'
             }}>
               Cancel
             </button>
           </div>
+
         </form>
       </div>
     </div>

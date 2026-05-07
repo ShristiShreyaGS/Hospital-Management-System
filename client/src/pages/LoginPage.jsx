@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { loginUser } from '../features/auth/authSlice'
 
 function LoginPage() {
@@ -55,6 +55,12 @@ function LoginPage() {
           {isLoading ? 'Logging in...' : 'Login'}
         </button>
       </form>
+      <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '14px' }}>
+        New patient?{' '}
+        <Link to="/register" style={{ color: '#2c3e50', fontWeight: '600' }}>
+          Register here
+        </Link>
+      </p>
     </div>
   )
 }
