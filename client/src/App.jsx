@@ -6,6 +6,9 @@ import PrivateRoute from './routes/PrivateRoute'
 import RoleRoute from './routes/RoleRoute'
 import UnauthorizedPage from './pages/UnauthorizedPage'
 import PatientsPage from './pages/PatientsPage'
+import DoctorsPage from './pages/DoctorsPage'
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -15,8 +18,14 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
         <Route path="/dashboard" element={
+          
           <PrivateRoute>
             <DashboardPage />
+          </PrivateRoute>
+        } />
+        <Route path="/doctors" element={
+          <PrivateRoute>
+            <DoctorsPage />
           </PrivateRoute>
         } />
         <Route path="/patients" element={
