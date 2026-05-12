@@ -78,7 +78,7 @@ const doctorSlice = createSlice({
         state.doctor = action.payload
       })
       .addCase(createDoctor.fulfilled, (state, action) => {
-        state.doctors.push(action.payload)
+        state.doctors.push(action.payload.doctor)
       })
       .addCase(updateDoctor.fulfilled, (state, action) => {
         const index = state.doctors.findIndex(d => d._id === action.payload._id)

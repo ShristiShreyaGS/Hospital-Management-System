@@ -9,11 +9,11 @@ const staffSchema = new mongoose.Schema({
   department: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Department',
-    required: true
+    required: null,
   },
   position: {
     type: String,
-    enum: ['Doctor', 'Nurse', 'Technician', 'Receptionist', 'Administrator'],
+    enum: ['Doctor', 'Nurse', 'Receptionist', 'Administrator'],
     required: true
   },
   specialization: {

@@ -7,6 +7,7 @@ import RoleRoute from './routes/RoleRoute'
 import UnauthorizedPage from './pages/UnauthorizedPage'
 import PatientsPage from './pages/PatientsPage'
 import DoctorsPage from './pages/DoctorsPage'
+import StaffManagementPage from './pages/admin/StaffManagementPage'
 
 
 function App() {
@@ -31,6 +32,11 @@ function App() {
         <Route path="/patients" element={
           <PrivateRoute>
             <PatientsPage />
+          </PrivateRoute>
+        } />
+        <Route path="/staff" element={
+          <PrivateRoute>
+            <StaffManagementPage />
           </PrivateRoute>
         } />
       </Routes>
