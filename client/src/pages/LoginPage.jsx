@@ -3,9 +3,233 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 import { loginUser } from '../features/auth/authSlice'
 
+const styles = `
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600&display=swap');
+
+  .login-root {
+    min-height: 100vh;
+    display: flex;
+    font-family: 'DM Sans', sans-serif;
+    background: #f0f4f8;
+  }
+
+  /* Left panel */
+  .login-panel {
+    width: 420px;
+    min-height: 100vh;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 48px;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.06);
+    position: relative;
+    z-index: 1;
+  }
+
+  .login-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 48px;
+  }
+
+  .login-logo-icon {
+    width: 36px;
+    height: 36px;
+    background: #1a4f7a;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+  }
+
+  .login-logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: #1a4f7a;
+    letter-spacing: 0.5px;
+  }
+
+  .login-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: #0f2d4a;
+    margin: 0 0 6px 0;
+    font-weight: 600;
+  }
+
+  .login-subheading {
+    font-size: 14px;
+    color: #7a8fa6;
+    margin: 0 0 36px 0;
+    font-weight: 400;
+  }
+
+  .login-error {
+    background: #fff0f0;
+    border-left: 3px solid #e05252;
+    color: #c0392b;
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  .login-field {
+    margin-bottom: 20px;
+  }
+
+  .login-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #4a6580;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .login-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid #d8e3ed;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: #0f2d4a;
+    background: #f8fafc;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    box-sizing: border-box;
+  }
+
+  .login-input:focus {
+    border-color: #1a4f7a;
+    background: #fff;
+  }
+
+  .login-btn {
+    width: 100%;
+    padding: 13px;
+    background: #1a4f7a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s, transform 0.1s;
+    letter-spacing: 0.3px;
+  }
+
+  .login-btn:hover:not(:disabled) {
+    background: #153f61;
+  }
+
+  .login-btn:active:not(:disabled) {
+    transform: scale(0.99);
+  }
+
+  .login-btn:disabled {
+    background: #7aa3c0;
+    cursor: not-allowed;
+  }
+
+  .login-register {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 13px;
+    color: #7a8fa6;
+  }
+
+  .login-register a {
+    color: #1a4f7a;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .login-register a:hover {
+    text-decoration: underline;
+  }
+
+  /* Right panel */
+  .login-visual {
+    flex: 1;
+    background: linear-gradient(135deg, #0f2d4a 0%, #1a4f7a 50%, #1e6fa8 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .login-visual::before {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    border: 80px solid rgba(255,255,255,0.04);
+    top: -100px;
+    right: -100px;
+  }
+
+  .login-visual::after {
+    content: '';
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    border: 60px solid rgba(255,255,255,0.04);
+    bottom: -80px;
+    left: -60px;
+  }
+
+  .login-visual-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 420px;
+  }
+
+  .login-visual-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    color: white;
+    margin: 0 0 20px 0;
+    line-height: 1.3;
+  }
+
+  .login-visual-desc {
+    font-size: 16px;
+    color: rgba(255,255,255,0.72);
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .login-visual {
+      display: none;
+    }
+
+    .login-panel {
+      width: 100%;
+      padding: 40px 28px;
+    }
+  }
+`
+
 function LoginPage() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
   const { isLoading, error } = useSelector((state) => state.auth)
 
   const [formData, setFormData] = useState({
@@ -14,11 +238,15 @@ function LoginPage() {
   })
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    })
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
+
     dispatch(loginUser(formData)).then((result) => {
       if (result.meta.requestStatus === 'fulfilled') {
         navigate('/dashboard')
@@ -27,41 +255,105 @@ function LoginPage() {
   }
 
   return (
-    <div style={{ maxWidth: '400px', margin: '100px auto', padding: '20px' }}>
-      <h2>HMS Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
+    <>
+      <style>{styles}</style>
+
+      <div className="login-root">
+
+        {/* Left Panel */}
+        <div className="login-panel">
+
+          <div className="login-logo">
+            <div className="login-logo-icon">🏥</div>
+            <span className="login-logo-text">HMS</span>
+          </div>
+
+          <h2 className="login-heading">Welcome back</h2>
+
+          <p className="login-subheading">
+            Sign in to your hospital account
+          </p>
+
+          {error && (
+            <div className="login-error">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit}>
+
+            <div className="login-field">
+              <label className="login-label">
+                Email Address
+              </label>
+
+              <input
+                className="login-input"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="you@hospital.com"
+                required
+              />
+            </div>
+
+            <div className="login-field">
+              <label className="login-label">
+                Password
+              </label>
+
+              <input
+                className="login-input"
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                required
+              />
+            </div>
+
+            <button
+              className="login-btn"
+              type="submit"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Signing in...' : 'Sign In'}
+            </button>
+
+          </form>
+
+          <p className="login-register">
+            New patient?{' '}
+            <Link to="/register">
+              Register here
+            </Link>
+          </p>
+
         </div>
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
+
+        {/* Right Panel */}
+        <div className="login-visual">
+
+          <div className="login-visual-content">
+
+            <h3 className="login-visual-title">
+              Hospital Management System
+            </h3>
+
+            <p className="login-visual-desc">
+              A unified platform for managing patients, doctors,
+              appointments, pharmacy, lab reports, and billing —
+              all in one place.
+            </p>
+
+          </div>
+
         </div>
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
-      <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '14px' }}>
-        New patient?{' '}
-        <Link to="/register" style={{ color: '#2c3e50', fontWeight: '600' }}>
-          Register here
-        </Link>
-      </p>
-    </div>
+
+      </div>
+    </>
   )
 }
 

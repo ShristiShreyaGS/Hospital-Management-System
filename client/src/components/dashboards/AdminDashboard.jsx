@@ -1,15 +1,196 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+
 import { getPatients } from '../../features/patients/patientSlice'
 import { getDoctors } from '../../features/doctors/doctorSlice'
 import { getAppointments } from '../../features/appointments/appointmentSlice'
 import { getBills } from '../../features/bills/billSlice'
 import { getStaff } from '../../features/staff/staffSlice'
 
+const styles = `
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600&display=swap');
+
+  .admin-dashboard {
+    min-height: 100vh;
+    background: #f0f4f8;
+    padding: 40px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .dashboard-header {
+    margin-bottom: 34px;
+  }
+
+  .dashboard-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    color: #0f2d4a;
+    margin: 0 0 10px;
+  }
+
+  .dashboard-subtitle {
+    color: #7a8fa6;
+    font-size: 15px;
+    margin: 0;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    cursor: pointer;
+    box-shadow: 0 10px 40px rgba(15, 45, 74, 0.08);
+    transition: all 0.2s ease;
+    border: 1px solid #e8eef5;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .stat-label {
+    color: #7a8fa6;
+    font-size: 14px;
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+
+  .stat-value {
+    font-size: 42px;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .dashboard-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 10px 40px rgba(15, 45, 74, 0.08);
+    margin-bottom: 32px;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    color: #0f2d4a;
+    font-size: 28px;
+    margin: 0;
+  }
+
+  .view-btn {
+    background: transparent;
+    border: 1.5px solid #1a4f7a;
+    color: #1a4f7a;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .view-btn:hover {
+    background: #1a4f7a;
+    color: white;
+  }
+
+  .actions-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .action-btn {
+    padding: 13px 22px;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+  }
+
+  .doctor-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .doctor-table thead {
+    background: #f8fafc;
+  }
+
+  .doctor-th {
+    padding: 14px 18px;
+    text-align: left;
+    color: #6d8299;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .doctor-td {
+    padding: 16px 18px;
+    color: #0f2d4a;
+    font-size: 14px;
+    border-bottom: 1px solid #edf2f7;
+  }
+
+  .empty-row {
+    text-align: center;
+    padding: 30px;
+    color: #7a8fa6;
+    font-size: 14px;
+  }
+
+  @media (max-width: 768px) {
+    .admin-dashboard {
+      padding: 24px;
+    }
+
+    .dashboard-title {
+      font-size: 30px;
+    }
+
+    .dashboard-card,
+    .stat-card {
+      padding: 22px;
+    }
+
+    .card-title {
+      font-size: 24px;
+    }
+
+    .doctor-table {
+      display: block;
+      overflow-x: auto;
+    }
+  }
+`
+
 function AdminDashboard() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
   const { patients } = useSelector((state) => state.patients)
   const { doctors } = useSelector((state) => state.doctors)
   const { appointments } = useSelector((state) => state.appointments)
@@ -25,136 +206,207 @@ function AdminDashboard() {
   }, [dispatch])
 
   const stats = [
-    { label: 'Total Patients', value: patients?.length || 0, color: '#2980b9', path: '/patients' },
-    { label: 'Total Doctors', value: doctors?.length || 0, color: '#27ae60', path: '/doctors' },
-    { label: 'Total Appointments', value: appointments?.length || 0, color: '#8e44ad', path: '/appointments' },
-    { label: 'Total Bills', value: bills?.length || 0, color: '#e67e22', path: '/bills' },
-    { label: 'Total Staff', value: staff?.length || 0, color: '#e74c3c', path: '/admin/staff' },
+    {
+      label: 'Total Patients',
+      value: patients?.length || 0,
+      color: '#1a4f7a',
+      path: '/patients',
+    },
+    {
+      label: 'Total Doctors',
+      value: doctors?.length || 0,
+      color: '#1f8f5f',
+      path: '/doctors',
+    },
+    {
+      label: 'Appointments',
+      value: appointments?.length || 0,
+      color: '#7b4bb7',
+      path: '/appointments',
+    },
+    {
+      label: 'Bills',
+      value: bills?.length || 0,
+      color: '#d9822b',
+      path: '/bills',
+    },
+    {
+      label: 'Staff Members',
+      value: staff?.length || 0,
+      color: '#d14b4b',
+      path: '/admin/staff',
+    },
   ]
 
   const quickActions = [
-    { label: '+ Add Staff', path: '/admin/staff', color: '#2c3e50' },
-    { label: '+ Add Patient', path: '/patients', color: '#2980b9' },
-    { label: 'Manage Beds', path: '/beds', color: '#27ae60' },
-    { label: 'Departments', path: '/departments', color: '#8e44ad' },
+    {
+      label: '+ Add Staff',
+      path: '/admin/staff',
+      color: '#0f2d4a',
+    },
+    {
+      label: '+ Add Patient',
+      path: '/patients',
+      color: '#1a4f7a',
+    },
+    {
+      label: 'Manage Beds',
+      path: '/beds',
+      color: '#1f8f5f',
+    },
+    {
+      label: 'Departments',
+      path: '/departments',
+      color: '#7b4bb7',
+    },
   ]
 
   return (
-    <div style={{ padding: '30px', background: '#f4f6f9', minHeight: '100vh' }}>
-      <h2 style={{ color: '#2c3e50', marginBottom: '8px' }}>Admin Dashboard</h2>
-      <p style={{ color: '#7f8c8d', marginBottom: '28px', fontSize: '14px' }}>
-        Welcome back! Here's what's happening in your hospital today.
-      </p>
+    <>
+      <style>{styles}</style>
 
-      {/* Stat Cards */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-        gap: '20px',
-        marginBottom: '30px'
-      }}>
-        {stats.map((stat) => (
-          <div
-            key={stat.label}
-            onClick={() => navigate(stat.path)}
-            style={{
-              background: 'white',
-              borderRadius: '8px',
-              padding: '24px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-              borderTop: `4px solid ${stat.color}`,
-              cursor: 'pointer',
-              transition: 'transform 0.2s',
-            }}
-            onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
-            onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
-          >
-            <p style={{ color: '#7f8c8d', fontSize: '13px', marginBottom: '8px' }}>
-              {stat.label}
-            </p>
-            <h3 style={{ fontSize: '36px', color: stat.color, margin: 0 }}>
-              {stat.value}
-            </h3>
-          </div>
-        ))}
-      </div>
+      <div className="admin-dashboard">
 
-      {/* Quick Actions */}
-      <div style={{
-        background: 'white',
-        borderRadius: '8px',
-        padding: '24px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-        marginBottom: '30px'
-      }}>
-        <h3 style={{ color: '#2c3e50', marginBottom: '16px' }}>Quick Actions</h3>
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-          {quickActions.map((action) => (
-            <button
-              key={action.label}
-              onClick={() => navigate(action.path)}
-              style={{
-                padding: '10px 20px',
-                background: action.color,
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontWeight: '500',
-                fontSize: '14px'
-              }}>
-              {action.label}
-            </button>
+        {/* Header */}
+        <div className="dashboard-header">
+
+          <h2 className="dashboard-title">
+            Admin Dashboard
+          </h2>
+
+          <p className="dashboard-subtitle">
+            Welcome back! Here's what's happening in your hospital today.
+          </p>
+
+        </div>
+
+        {/* Stats */}
+        <div className="stats-grid">
+
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="stat-card"
+              onClick={() => navigate(stat.path)}
+            >
+              <p className="stat-label">
+                {stat.label}
+              </p>
+
+              <h3
+                className="stat-value"
+                style={{ color: stat.color }}
+              >
+                {stat.value}
+              </h3>
+            </div>
           ))}
-        </div>
-      </div>
 
-      {/* Recent Doctors */}
-      <div style={{
-        background: 'white',
-        borderRadius: '8px',
-        padding: '24px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
-          <h3 style={{ color: '#2c3e50' }}>Recent Doctors</h3>
-          <button onClick={() => navigate('/doctors')} style={{
-            background: 'none', border: '1px solid #2c3e50',
-            padding: '4px 12px', borderRadius: '4px',
-            cursor: 'pointer', fontSize: '13px', color: '#2c3e50'
-          }}>View All</button>
         </div>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ background: '#f8f9fa' }}>
-              <th style={th}>Name</th>
-              <th style={th}>Specialization</th>
-              <th style={th}>Experience</th>
-              <th style={th}>Fee</th>
-            </tr>
-          </thead>
-          <tbody>
-            {doctors.slice(0, 5).map((doc) => (
-              <tr key={doc._id} style={{ borderBottom: '1px solid #ecf0f1' }}>
-                <td style={td}>{doc.userId?.name || 'N/A'}</td>
-                <td style={td}>{doc.specialization}</td>
-                <td style={td}>{doc.yearsOfExperience} yrs</td>
-                <td style={td}>₹{doc.consultationFee}</td>
-              </tr>
+
+        {/* Quick Actions */}
+        <div className="dashboard-card">
+
+          <div className="card-header">
+
+            <h3 className="card-title">
+              Quick Actions
+            </h3>
+
+          </div>
+
+          <div className="actions-wrap">
+
+            {quickActions.map((action) => (
+              <button
+                key={action.label}
+                className="action-btn"
+                onClick={() => navigate(action.path)}
+                style={{
+                  background: action.color,
+                }}
+              >
+                {action.label}
+              </button>
             ))}
-            {doctors.length === 0 && (
-              <tr><td colSpan="4" style={{ textAlign: 'center', padding: '20px', color: '#7f8c8d' }}>
-                No doctors yet
-              </td></tr>
-            )}
-          </tbody>
-        </table>
+
+          </div>
+
+        </div>
+
+        {/* Recent Doctors */}
+        <div className="dashboard-card">
+
+          <div className="card-header">
+
+            <h3 className="card-title">
+              Recent Doctors
+            </h3>
+
+            <button
+              className="view-btn"
+              onClick={() => navigate('/doctors')}
+            >
+              View All
+            </button>
+
+          </div>
+
+          <table className="doctor-table">
+
+            <thead>
+              <tr>
+                <th className="doctor-th">Name</th>
+                <th className="doctor-th">Specialization</th>
+                <th className="doctor-th">Experience</th>
+                <th className="doctor-th">Fee</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              {doctors.slice(0, 5).map((doc) => (
+                <tr key={doc._id}>
+
+                  <td className="doctor-td">
+                    {doc.userId?.name || 'N/A'}
+                  </td>
+
+                  <td className="doctor-td">
+                    {doc.specialization}
+                  </td>
+
+                  <td className="doctor-td">
+                    {doc.yearsOfExperience} yrs
+                  </td>
+
+                  <td className="doctor-td">
+                    ₹{doc.consultationFee}
+                  </td>
+
+                </tr>
+              ))}
+
+              {doctors.length === 0 && (
+                <tr>
+                  <td
+                    colSpan="4"
+                    className="empty-row"
+                  >
+                    No doctors yet
+                  </td>
+                </tr>
+              )}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
       </div>
-    </div>
+    </>
   )
 }
-
-const th = { padding: '10px 16px', textAlign: 'left', color: '#7f8c8d', fontSize: '13px' }
-const td = { padding: '10px 16px', fontSize: '14px' }
 
 export default AdminDashboard
