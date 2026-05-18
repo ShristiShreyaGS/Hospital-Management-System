@@ -8,35 +8,58 @@ import UnauthorizedPage from './pages/UnauthorizedPage'
 import PatientsPage from './pages/PatientsPage'
 import DoctorsPage from './pages/DoctorsPage'
 import StaffManagementPage from './pages/admin/StaffManagementPage'
-
+import AppointmentsPage from './pages/AppointmentsPage'  // fixed: was imported as AppointmentPage
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public routes */}
+        <Route path="/"         element={<Navigate to="/login" replace />} />
+        <Route path="/login"    element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<LoginPage />} />
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
+
+        {/* Dashboard — all authenticated roles */}
         <Route path="/dashboard" element={
-          
           <PrivateRoute>
             <DashboardPage />
           </PrivateRoute>
         } />
-        <Route path="/doctors" element={
+
+        {/* Appointments — all roles, each sees their own filtered view */}
+        <Route path="/appointments" element={
           <PrivateRoute>
-            <DoctorsPage />
+            <RoleRoute allowedRoles={['patient', 'doctor', 'receptionist', 'admin']}>
+              <AppointmentsPage />
+            </RoleRoute>
           </PrivateRoute>
         } />
+
+        {/* Patients — admin and receptionist only */}
         <Route path="/patients" element={
           <PrivateRoute>
-            <PatientsPage />
+            <RoleRoute allowedRoles={['admin', 'receptionist']}>
+              <PatientsPage />
+            </RoleRoute>
           </PrivateRoute>
         } />
+
+        {/* Doctors — admin and receptionist only */}
+        <Route path="/doctors" element={
+          <PrivateRoute>
+            <RoleRoute allowedRoles={['admin', 'receptionist']}>
+              <DoctorsPage />
+            </RoleRoute>
+          </PrivateRoute>
+        } />
+
+        {/* Staff management — admin only */}
         <Route path="/staff" element={
           <PrivateRoute>
-            <StaffManagementPage />
+            <RoleRoute allowedRoles={['admin']}>
+              <StaffManagementPage />
+            </RoleRoute>
           </PrivateRoute>
         } />
       </Routes>

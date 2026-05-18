@@ -3,7 +3,18 @@ import axios from 'axios'
 
 const API = 'http://localhost:5000/api'
 
-// Login
+// Decode token to restore user on page refresh
+const getUserFromToken = () => {
+  try {
+    const token = localStorage.getItem('token')
+    if (!token) return null
+    const decoded = JSON.parse(atob(token.split('.')[1]))
+    return { id: decoded.id, role: decoded.role }
+  } catch {
+    return null
+  }
+}
+
 export const loginUser = createAsyncThunk('auth/login', async (formData, thunkAPI) => {
   try {
     const res = await axios.post(`${API}/auth/login`, formData)
@@ -14,7 +25,6 @@ export const loginUser = createAsyncThunk('auth/login', async (formData, thunkAP
   }
 })
 
-// Register Patient
 export const registerUser = createAsyncThunk('auth/register', async (formData, thunkAPI) => {
   try {
     const res = await axios.post(`${API}/auth/register`, formData)
@@ -27,7 +37,7 @@ export const registerUser = createAsyncThunk('auth/register', async (formData, t
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    user: null,
+    user: getUserFromToken(),
     token: localStorage.getItem('token') || null,
     isLoading: false,
     error: null,
@@ -45,7 +55,6 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Login
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true
         state.error = null
@@ -59,7 +68,6 @@ const authSlice = createSlice({
         state.isLoading = false
         state.error = action.payload
       })
-      // Register
       .addCase(registerUser.pending, (state) => {
         state.isLoading = true
         state.error = null

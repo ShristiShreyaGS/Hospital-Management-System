@@ -234,14 +234,14 @@ function AdminDashboard() {
       label: 'Staff Members',
       value: staff?.length || 0,
       color: '#d14b4b',
-      path: '/admin/staff',
+      path: '/staff',
     },
   ]
 
   const quickActions = [
     {
       label: '+ Add Staff',
-      path: '/admin/staff',
+      path: '/staff',
       color: '#0f2d4a',
     },
     {

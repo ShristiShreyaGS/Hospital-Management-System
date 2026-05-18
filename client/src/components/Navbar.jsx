@@ -17,7 +17,7 @@ function Navbar() {
       { label: 'Dashboard', path: '/dashboard' },
       { label: 'Patients', path: '/patients' },
       { label: 'Doctors', path: '/doctors' },
-      { label: 'Staff', path: '/admin/staff' },
+      { label: 'Staff', path: '/staff' },
       { label: 'Appointments', path: '/appointments' },
       { label: 'Departments', path: '/departments' },
       { label: 'Beds', path: '/beds' },
