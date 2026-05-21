@@ -9,11 +9,11 @@ const staffSchema = new mongoose.Schema({
   department: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Department',
-    required: null,
+    default: null,
   },
   position: {
     type: String,
-    enum: ['Doctor', 'Nurse', 'Receptionist', 'Administrator'],
+    enum: ['Doctor', 'Nurse', 'Receptionist', 'Administrator', 'Lab_Staff', 'Pharmacist'],
     required: true
   },
   specialization: {
@@ -47,10 +47,15 @@ const staffSchema = new mongoose.Schema({
   },
   contactNumber: {
     type: String,
-    required: true
+    default: ''
   },
   address: {
     type: String,
+    default: ''
+  },
+  shift: {
+    type: String,
+    enum: ['Morning', 'Afternoon', 'Night', ''],
     default: ''
   },
   createdAt: {

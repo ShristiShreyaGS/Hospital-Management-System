@@ -5,7 +5,7 @@ const admitPatient = async (req, res) => {
   try {
     const { patientId, doctorId, bedId, reason } = req.body;
 
-    // Check if bed is available
+    
     const bed = await Bed.findById(bedId);
     if (!bed) {
       return res.status(404).json({ message: 'Bed not found' });
@@ -44,7 +44,7 @@ const dischargePatient = async (req, res) => {
       return res.status(404).json({ message: 'Admission not found' });
     }
 
-    // Free up the bed
+    // here Free up the bed
     await Bed.findByIdAndUpdate(admission.bedId, {
       status: 'Available',
       patientId: null

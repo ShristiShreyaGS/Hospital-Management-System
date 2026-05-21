@@ -13,7 +13,7 @@ const { authorize } = require('../middlewares/roleMiddleware');
 
 router.use(protect);
 
-// Patient + receptionist/admin can book
+
 router.post('/', authorize('patient', 'receptionist', 'admin'), addAppointment);
 
 // ALL roles fetch their own filtered view (controller applies the filter)
@@ -21,7 +21,7 @@ router.get('/',    authorize('patient', 'doctor', 'receptionist', 'admin'), getA
 router.get('/:id', authorize('patient', 'doctor', 'receptionist', 'admin'), getAppointmentById);
 
 // Patient (reschedule own), receptionist, admin can update — controller blocks cross-ownership
-router.put('/:id', authorize('patient', 'receptionist', 'admin'), updateAppointment);
+router.put('/:id', authorize('patient', 'receptionist', 'admin','doctor'), updateAppointment);
 
 // Patient (cancel own) + admin/receptionist can delete — controller blocks doctors
 router.delete('/:id', authorize('patient', 'receptionist', 'admin'), deleteAppointment);

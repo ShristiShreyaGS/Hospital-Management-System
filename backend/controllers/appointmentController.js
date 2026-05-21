@@ -39,25 +39,67 @@ const addAppointment = async (req, res) => {
 const getAllAppointments = async (req, res) => {
   try {
     const { role, id: userId } = req.user;
+    const {
+      search,
+      status,
+      date,
+      sortBy = 'appointmentDate',
+      order = 'desc',
+      page = 1,
+      limit = 10
+    } = req.query;
 
     let filter = {};
 
     if (role === 'patient') {
       const patient = await Patient.findOne({ userId });
       if (!patient) return res.status(404).json({ message: 'Patient profile not found' });
-      filter = { patientId: patient._id };
+      filter.patientId = patient._id;
     } else if (role === 'doctor') {
       const doctor = await Doctor.findOne({ userId });
       if (!doctor) return res.status(404).json({ message: 'Doctor profile not found' });
-      filter = { doctorId: doctor._id };
+      filter.doctorId = doctor._id;
     }
 
-    const appointments = await Appointment.find(filter)
+    // Filter by status
+    if (status) filter.status = status;
+
+    // Filter by date (whole day range)
+    if (date) {
+      const start = new Date(date);
+      const end = new Date(date);
+      end.setDate(end.getDate() + 1);
+      filter.appointmentDate = { $gte: start, $lt: end };
+    }
+
+    const sortOrder = order === 'asc' ? 1 : -1;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const total = await Appointment.countDocuments(filter);
+
+    let appointments = await Appointment.find(filter)
       .populate({ path: 'patientId', populate: { path: 'userId', select: 'name' } })
       .populate({ path: 'doctorId', populate: { path: 'userId', select: 'name' }, select: 'userId specialization' })
-      .sort({ appointmentDate: -1 });
+      .sort({ [sortBy]: sortOrder })
+      .skip(skip)
+      .limit(parseInt(limit));
 
-    res.status(200).json(appointments);
+    // Post-populate search (by name, doctor, specialization, reason)
+    if (search) {
+      const s = search.toLowerCase();
+      appointments = appointments.filter(apt =>
+        apt.patientId?.userId?.name?.toLowerCase().includes(s) ||
+        apt.doctorId?.userId?.name?.toLowerCase().includes(s) ||
+        apt.doctorId?.specialization?.toLowerCase().includes(s) ||
+        apt.reason?.toLowerCase().includes(s)
+      );
+    }
+
+    res.status(200).json({
+      appointments,
+      total,
+      page: parseInt(page),
+      pages: Math.ceil(total / parseInt(limit)),
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -68,25 +110,21 @@ const getAppointmentById = async (req, res) => {
     const { role, id: userId } = req.user;
 
     const appointment = await Appointment.findById(req.params.id)
-      .populate({ path: 'patientId', populate: { path: 'userId', select: 'name' } })
-      .populate({ path: 'doctorId', populate: { path: 'userId', select: 'name' }, select: 'userId specialization' });
+      .populate({ path: 'patientId', populate: { path: 'userId', select: 'name email' } })
+      .populate({ path: 'doctorId', populate: { path: 'userId', select: 'name' }, select: 'userId specialization degree consultationFee' });
 
-    if (!appointment) {
-      return res.status(404).json({ message: 'Appointment not found' });
-    }
+    if (!appointment) return res.status(404).json({ message: 'Appointment not found' });
 
     if (role === 'patient') {
       const patient = await Patient.findOne({ userId });
-      if (!patient || appointment.patientId._id.toString() !== patient._id.toString()) {
+      if (!patient || appointment.patientId._id.toString() !== patient._id.toString())
         return res.status(403).json({ message: 'Access denied' });
-      }
     }
 
     if (role === 'doctor') {
       const doctor = await Doctor.findOne({ userId });
-      if (!doctor || appointment.doctorId._id.toString() !== doctor._id.toString()) {
+      if (!doctor || appointment.doctorId._id.toString() !== doctor._id.toString())
         return res.status(403).json({ message: 'Access denied' });
-      }
     }
 
     res.status(200).json(appointment);
@@ -100,22 +138,20 @@ const updateAppointment = async (req, res) => {
     const { role, id: userId } = req.user;
 
     const existing = await Appointment.findById(req.params.id);
-    if (!existing) {
-      return res.status(404).json({ message: 'Appointment not found' });
-    }
+    if (!existing) return res.status(404).json({ message: 'Appointment not found' });
 
     if (role === 'patient') {
       const patient = await Patient.findOne({ userId });
-      if (!patient || existing.patientId.toString() !== patient._id.toString()) {
+      if (!patient || existing.patientId.toString() !== patient._id.toString())
         return res.status(403).json({ message: 'Access denied' });
-      }
     }
 
     if (role === 'doctor') {
       const doctor = await Doctor.findOne({ userId });
-      if (!doctor || existing.doctorId.toString() !== doctor._id.toString()) {
+      if (!doctor || existing.doctorId.toString() !== doctor._id.toString())
         return res.status(403).json({ message: 'Access denied' });
-      }
+      // Doctor can ONLY update status — strip everything else
+      req.body = { status: req.body.status };
     }
 
     const appointment = await Appointment.findByIdAndUpdate(
@@ -137,19 +173,15 @@ const deleteAppointment = async (req, res) => {
     const { role, id: userId } = req.user;
 
     const existing = await Appointment.findById(req.params.id);
-    if (!existing) {
-      return res.status(404).json({ message: 'Appointment not found' });
-    }
+    if (!existing) return res.status(404).json({ message: 'Appointment not found' });
 
-    if (role === 'doctor') {
+    if (role === 'doctor')
       return res.status(403).json({ message: 'Doctors cannot delete appointments' });
-    }
 
     if (role === 'patient') {
       const patient = await Patient.findOne({ userId });
-      if (!patient || existing.patientId.toString() !== patient._id.toString()) {
+      if (!patient || existing.patientId.toString() !== patient._id.toString())
         return res.status(403).json({ message: 'Access denied' });
-      }
     }
 
     await Appointment.findByIdAndDelete(req.params.id);

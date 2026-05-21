@@ -3,10 +3,12 @@ import { useSelector } from 'react-redux'
 import Navbar from '../components/Navbar'
 import AppointmentList from '../components/appointments/AppointmentList'
 import AppointmentForm from '../components/appointments/AppointmentForm'
+import AppointmentDetail from '../components/appointments/AppointmentDetail'
 
 function AppointmentsPage() {
   const [showForm, setShowForm] = useState(false)
   const [appointmentToEdit, setAppointmentToEdit] = useState(null)
+  const [viewingId, setViewingId] = useState(null)
   const { user } = useSelector((state) => state.auth)
 
   const handleEdit = (appointment) => {
@@ -14,14 +16,16 @@ function AppointmentsPage() {
     setShowForm(true)
   }
 
+  const handleView = (id) => {
+    setViewingId(id)
+  }
+
   const handleClose = () => {
     setShowForm(false)
     setAppointmentToEdit(null)
   }
 
-  // Doctors cannot book appointments
-  const canBook = user?.role !== 'doctor' && user?.role !== 'nurse' &&
-    user?.role !== 'lab_staff' && user?.role !== 'pharmacist'
+  const canBook = !['doctor', 'nurse', 'lab_staff', 'pharmacist'].includes(user?.role)
 
   const pageTitle = {
     patient: 'My Appointments',
@@ -44,7 +48,7 @@ function AppointmentsPage() {
             </h2>
             <p style={{ color: '#7f8c8d', fontSize: '14px' }}>
               {user?.role === 'patient' && 'View and manage your appointments'}
-              {user?.role === 'doctor' && 'Your scheduled appointments for today and upcoming'}
+              {user?.role === 'doctor' && 'Your scheduled appointments'}
               {user?.role === 'receptionist' && 'Manage all patient appointments'}
               {user?.role === 'admin' && 'View and manage all appointments'}
             </p>
@@ -60,18 +64,24 @@ function AppointmentsPage() {
           )}
         </div>
 
-        {/* White card container */}
         <div style={{
           background: 'white', borderRadius: '8px',
           padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
         }}>
-          <AppointmentList onEdit={handleEdit} />
+          <AppointmentList onEdit={handleEdit} onView={handleView} />  {/* ← onView added */}
         </div>
 
         {showForm && (
           <AppointmentForm
             appointmentToEdit={appointmentToEdit}
             onClose={handleClose}
+          />
+        )}
+
+        {viewingId && (  // ← Detail modal added
+          <AppointmentDetail
+            appointmentId={viewingId}
+            onClose={() => setViewingId(null)}
           />
         )}
       </div>

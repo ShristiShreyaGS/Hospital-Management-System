@@ -34,7 +34,9 @@ const billSchema = new mongoose.Schema({
   paymentDate: {
     type: Date,
     default: Date.now
-  }
+  },
+  razorpayOrderId: { type: String },
+razorpayPaymentId: { type: String }
 });
 
 module.exports = mongoose.model('Bill', billSchema);

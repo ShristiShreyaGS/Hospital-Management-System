@@ -37,7 +37,7 @@ function AddStaffForm({ onClose }) {
   const roleToPosition = {
     nurse: 'Nurse',
     receptionist: 'Receptionist',
-    lab_staff: 'Lab Staff',
+    lab_staff: 'Lab_Staff',
     pharmacist: 'Pharmacist',
   }
 

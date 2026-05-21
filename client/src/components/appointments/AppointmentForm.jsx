@@ -15,7 +15,7 @@ function AppointmentForm({ appointmentToEdit, onClose }) {
     appointmentDate: '',
     appointmentTime: '',
     reason: '',
-    status: 'pending',
+    status: 'Scheduled',   // ✅ fixed
   })
 
   useEffect(() => {
@@ -30,7 +30,7 @@ function AppointmentForm({ appointmentToEdit, onClose }) {
         appointmentDate: appointmentToEdit.appointmentDate?.split('T')[0] || '',
         appointmentTime: appointmentToEdit.appointmentTime || '',
         reason: appointmentToEdit.reason || '',
-        status: appointmentToEdit.status || 'pending',
+        status: appointmentToEdit.status || 'Scheduled',  // ✅ fixed
       })
     }
   }, [appointmentToEdit])
@@ -42,7 +42,6 @@ function AppointmentForm({ appointmentToEdit, onClose }) {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (appointmentToEdit) {
-      // Doctor can only update status
       if (user?.role === 'doctor') {
         dispatch(updateAppointment({
           id: appointmentToEdit._id,
@@ -55,7 +54,6 @@ function AppointmentForm({ appointmentToEdit, onClose }) {
         }))
       }
     } else {
-      // Patient: backend auto-fills patientId from req.user
       const data = user?.role === 'patient'
         ? { doctorId: formData.doctorId, appointmentDate: formData.appointmentDate, appointmentTime: formData.appointmentTime, reason: formData.reason }
         : formData
@@ -92,7 +90,7 @@ function AppointmentForm({ appointmentToEdit, onClose }) {
         }}>
           <h3 style={{ color: '#2c3e50', marginBottom: '20px' }}>Update Appointment Status</h3>
           <p style={{ color: '#7f8c8d', marginBottom: '16px' }}>
-            Patient: {appointmentToEdit.patientId?.name || 'N/A'}<br />
+            Patient: {appointmentToEdit.patientId?.userId?.name || 'N/A'}<br />
             Date: {new Date(appointmentToEdit.appointmentDate).toLocaleDateString('en-IN')}<br />
             Time: {appointmentToEdit.appointmentTime}
           </p>
@@ -100,10 +98,10 @@ function AppointmentForm({ appointmentToEdit, onClose }) {
             <label style={labelStyle}>Status</label>
             <select name="status" value={formData.status}
               onChange={handleChange} style={inputStyle}>
-              <option value="pending">Pending</option>
-              <option value="confirmed">Confirmed</option>
-              <option value="completed">Completed</option>
-              <option value="cancelled">Cancelled</option>
+              <option value="Scheduled">Scheduled</option>      {/* ✅ fixed */}
+              <option value="Completed">Completed</option>      {/* ✅ fixed */}
+              <option value="Cancelled">Cancelled</option>      {/* ✅ fixed */}
+              <option value="No Show">No Show</option>          {/* ✅ fixed */}
             </select>
             <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
               <button type="submit" style={{
@@ -140,7 +138,6 @@ function AppointmentForm({ appointmentToEdit, onClose }) {
 
         <form onSubmit={handleSubmit}>
 
-          {/* Patient selector — only for admin/receptionist */}
           {(user?.role === 'admin' || user?.role === 'receptionist') && (
             <>
               <label style={labelStyle}>Patient</label>
@@ -156,7 +153,6 @@ function AppointmentForm({ appointmentToEdit, onClose }) {
             </>
           )}
 
-          {/* Doctor selector */}
           <label style={labelStyle}>Doctor</label>
           <select name="doctorId" value={formData.doctorId}
             onChange={handleChange} required style={inputStyle}>
@@ -168,7 +164,6 @@ function AppointmentForm({ appointmentToEdit, onClose }) {
             ))}
           </select>
 
-          {/* Date */}
           <label style={labelStyle}>Appointment Date</label>
           <input type="date" name="appointmentDate"
             value={formData.appointmentDate}
@@ -176,7 +171,6 @@ function AppointmentForm({ appointmentToEdit, onClose }) {
             min={new Date().toISOString().split('T')[0]}
           />
 
-          {/* Time */}
           <label style={labelStyle}>Appointment Time</label>
           <select name="appointmentTime" value={formData.appointmentTime}
             onChange={handleChange} required style={inputStyle}>
@@ -188,22 +182,20 @@ function AppointmentForm({ appointmentToEdit, onClose }) {
             ))}
           </select>
 
-          {/* Reason */}
           <label style={labelStyle}>Reason for Visit</label>
           <input type="text" name="reason" value={formData.reason}
             onChange={handleChange} required style={inputStyle}
             placeholder="e.g. Fever, Checkup, Follow-up" />
 
-          {/* Status — only for admin/receptionist when editing */}
           {appointmentToEdit && (user?.role === 'admin' || user?.role === 'receptionist') && (
             <>
               <label style={labelStyle}>Status</label>
               <select name="status" value={formData.status}
                 onChange={handleChange} style={inputStyle}>
-                <option value="pending">Pending</option>
-                <option value="confirmed">Confirmed</option>
-                <option value="completed">Completed</option>
-                <option value="cancelled">Cancelled</option>
+                <option value="Scheduled">Scheduled</option>    {/* ✅ fixed */}
+                <option value="Completed">Completed</option>    {/* ✅ fixed */}
+                <option value="Cancelled">Cancelled</option>    {/* ✅ fixed */}
+                <option value="No Show">No Show</option>        {/* ✅ fixed */}
               </select>
             </>
           )}
