@@ -10,6 +10,7 @@ import DoctorsPage from './pages/DoctorsPage'
 import StaffManagementPage from './pages/admin/StaffManagementPage'
 import AppointmentsPage from './pages/AppointmentsPage'  // fixed: was imported as AppointmentPage
 import BillsPage from './pages/BillsPage'
+import EMRPage from './pages/EMRPage'
 
 function App() {
   return (
@@ -69,6 +70,15 @@ function App() {
           <PrivateRoute>
             <RoleRoute allowedRoles={['patient', 'doctor', 'receptionist', 'admin']}>
               <BillsPage />
+            </RoleRoute>
+          </PrivateRoute>
+        } />
+
+        {/* EMR — all roles, each sees their own filtered view */}
+        <Route path="/emr" element={
+          <PrivateRoute>
+            <RoleRoute allowedRoles={['patient', 'doctor', 'receptionist', 'admin']}>
+              <EMRPage />
             </RoleRoute>
           </PrivateRoute>
         } />

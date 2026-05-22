@@ -6,6 +6,7 @@ import appointmentReducer from './features/appointments/appointmentSlice'
 import billReducer from './features/bills/billSlice'
 import staffReducer from './features/staff/staffSlice'
 import departmentReducer from './features/departments/departmentSlice'
+import emrReducer from './features/emr/emrSlice'
 
 const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
     bills: billReducer,
     staff: staffReducer,
     departments: departmentReducer,
+    emr: emrReducer,
   },
 })
 
