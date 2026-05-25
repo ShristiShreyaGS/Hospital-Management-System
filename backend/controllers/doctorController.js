@@ -75,12 +75,20 @@ const getDoctorById = async (req, res) => {
 
 const updateDoctor = async (req, res) => {
   try {
-    const doctor = await Doctor.findByIdAndUpdate(req.params.id, req.body, { new: true })
-      .populate('userId', 'name email phone');
+    const doctor = await Doctor.findById(req.params.id);
     if (!doctor) {
       return res.status(404).json({ message: 'Doctor not found' });
     }
-    res.status(200).json({ message: 'Doctor updated successfully', doctor });
+
+    // Check authorization: allow if admin or if doctor is updating their own profile
+    if (req.user.role === 'doctor' && doctor.userId.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Not authorized to update this doctor profile' });
+    }
+
+    const updatedDoctor = await Doctor.findByIdAndUpdate(req.params.id, req.body, { new: true })
+      .populate('userId', 'name email phone');
+    
+    res.status(200).json({ message: 'Doctor updated successfully', doctor: updatedDoctor });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

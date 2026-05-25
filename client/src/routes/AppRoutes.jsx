@@ -1,24 +1,24 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import LoginPage from './pages/LoginPage'
-import RegisterPage from './pages/RegisterPage'
-import DashboardPage from './pages/DashboardPage'
-import PrivateRoute from './routes/PrivateRoute'
-import RoleRoute from './routes/RoleRoute'
-import UnauthorizedPage from './pages/UnauthorizedPage'
-import PatientsPage from './pages/PatientsPage'
-import DoctorsPage from './pages/DoctorsPage'
-import StaffManagementPage from './pages/admin/StaffManagementPage'
-import AppointmentsPage from './pages/AppointmentsPage'
-import BillsPage from './pages/BillsPage'
-import EMRPage from './pages/EMRPage'
-import LabPage from './pages/LabPage'
-import PharmacyPage from './pages/PharmacyPage'
-import ProfilePage from './pages/ProfilePage'
-import PatientProfilePage from './pages/PatientProfilePage'
-import DoctorProfilePage from './pages/DoctorProfilePage'
-import StaffProfilePage from './pages/StaffProfilePage'
+import LoginPage from '../pages/LoginPage'
+import RegisterPage from '../pages/RegisterPage'
+import DashboardPage from '../pages/DashboardPage'
+import PrivateRoute from './PrivateRoute'
+import RoleRoute from './RoleRoute'
+import UnauthorizedPage from '../pages/UnauthorizedPage'
+import PatientsPage from '../pages/PatientsPage'
+import DoctorsPage from '../pages/DoctorsPage'
+import StaffManagementPage from '../pages/admin/StaffManagementPage'
+import AppointmentsPage from '../pages/AppointmentsPage'
+import BillsPage from '../pages/BillsPage'
+import EMRPage from '../pages/EMRPage'
+import LabPage from '../pages/LabPage'
+import PharmacyPage from '../pages/PharmacyPage'
+import ProfilePage from '../pages/ProfilePage'
+import PatientProfilePage from '../pages/PatientProfilePage'
+import DoctorProfilePage from '../pages/DoctorProfilePage'
+import StaffProfilePage from '../pages/StaffProfilePage'
 
-function App() {
+function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
@@ -142,4 +142,4 @@ function App() {
   )
 }
 
-export default App
+export default AppRoutes

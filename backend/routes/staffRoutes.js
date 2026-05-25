@@ -18,7 +18,7 @@ router.post('/', authorize('admin'), addStaff);
 router.get('/', authorize('admin', 'receptionist', 'doctor', 'nurse'), getAllStaff);
 router.get('/:id', authorize('admin', 'receptionist', 'doctor', 'nurse'), getStaffById);
 router.get('/department/:departmentId', authorize('admin', 'receptionist'), getStaffByDepartment);
-router.put('/:id', authorize('admin'), updateStaff);
+router.put('/:id', authorize('admin', 'receptionist', 'nurse', 'lab_staff', 'pharmacist'), updateStaff);
 router.delete('/:id', authorize('admin'), deleteStaff);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-# Hospital Management System (HMS) - Learning Syllabus
+# HospiManagement System (HMS) - Learning Syllabustal 
 
 A comprehensive learning guide for understanding the HMS project architecture, technologies, and implementation.
 

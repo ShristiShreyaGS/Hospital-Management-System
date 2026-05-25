@@ -72,8 +72,18 @@ const getStaffByDepartment = async (req, res) => {
 const updateStaff = async (req, res) => {
   try {
     const { position, specialization, experience, licenseNumber, licenseExpiry, qualifications, status, contactNumber, address } = req.body;
+    
+    const staff = await Staff.findById(req.params.id);
+    if (!staff) {
+      return res.status(404).json({ message: 'Staff not found' });
+    }
 
-    const staff = await Staff.findByIdAndUpdate(
+    // Check authorization: allow if admin or if the staff member is updating their own profile
+    if (req.user.role !== 'admin' && staff.userId.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Not authorized to update this staff profile' });
+    }
+
+    const updatedStaff = await Staff.findByIdAndUpdate(
       req.params.id,
       {
         position,
@@ -92,11 +102,7 @@ const updateStaff = async (req, res) => {
       .populate('userId', 'name email')
       .populate('department', 'name');
 
-    if (!staff) {
-      return res.status(404).json({ message: 'Staff not found' });
-    }
-
-    res.status(200).json({ message: 'Staff updated successfully', staff });
+    res.status(200).json({ message: 'Staff updated successfully', staff: updatedStaff });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

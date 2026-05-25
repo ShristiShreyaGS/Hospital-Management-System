@@ -287,9 +287,20 @@ function DoctorDashboard() {
         {/* Quick Actions */}
         <div className="dashboard-card">
 
-          <h3 className="card-title">
-            Quick Actions
-          </h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <h3 className="card-title" style={{ margin: 0 }}>
+              Quick Actions
+            </h3>
+            <button
+              onClick={() => navigate('/doctor-profile')}
+              style={{
+                padding: '6px 16px', background: 'none',
+                border: '1.5px solid #0f2d4a', borderRadius: '8px',
+                color: '#0f2d4a', cursor: 'pointer', fontSize: '13px', fontWeight: '600'
+              }}>
+              Edit Profile
+            </button>
+          </div>
 
           <div className="actions-wrap">
 

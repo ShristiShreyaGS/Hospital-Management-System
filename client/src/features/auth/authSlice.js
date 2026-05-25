@@ -34,6 +34,32 @@ export const registerUser = createAsyncThunk('auth/register', async (formData, t
   }
 })
 
+export const updateUserProfile = createAsyncThunk('auth/updateProfile', async (formData, thunkAPI) => {
+  try {
+    const token = localStorage.getItem('token')
+    const res = await axios.put(`${API}/auth/profile`, formData, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    return res.data
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err.response.data.message)
+  }
+})
+
+export const fetchCurrentUser = createAsyncThunk('auth/fetchCurrentUser', async (_, thunkAPI) => {
+  try {
+    const token = localStorage.getItem('token')
+    if (!token) return null
+    const res = await axios.get(`${API}/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    return res.data
+  } catch (err) {
+    // Silently fail - user will be null
+    return null
+  }
+})
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -80,6 +106,24 @@ const authSlice = createSlice({
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false
         state.error = action.payload
+      })
+      .addCase(updateUserProfile.pending, (state) => {
+        state.isLoading = true
+        state.error = null
+      })
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.user = action.payload.user
+        state.error = null
+      })
+      .addCase(updateUserProfile.rejected, (state, action) => {
+        state.isLoading = false
+        state.error = action.payload
+      })
+      .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.user = action.payload
+        }
       })
   },
 })

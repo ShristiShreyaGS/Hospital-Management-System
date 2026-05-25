@@ -313,6 +313,13 @@ function AdminDashboard() {
               Quick Actions
             </h3>
 
+            <button
+              className="view-btn"
+              onClick={() => navigate('/profile')}
+            >
+              Edit Profile
+            </button>
+
           </div>
 
           <div className="actions-wrap">

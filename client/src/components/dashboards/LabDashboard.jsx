@@ -7,10 +7,23 @@ function LabDashboard() {
 
   return (
     <div style={{ padding: '30px', background: '#f4f6f9', minHeight: '100vh' }}>
-      <h2 style={{ color: '#2c3e50', marginBottom: '8px' }}>Lab Dashboard</h2>
-      <p style={{ color: '#7f8c8d', marginBottom: '28px', fontSize: '14px' }}>
-        Welcome, {user?.name}. Manage lab tests and results.
-      </p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
+        <div>
+          <h2 style={{ color: '#2c3e50', marginBottom: '8px' }}>Lab Dashboard</h2>
+          <p style={{ color: '#7f8c8d', fontSize: '14px', margin: 0 }}>
+            Welcome, {user?.name}. Manage lab tests and results.
+          </p>
+        </div>
+        <button
+          onClick={() => navigate('/staff-profile')}
+          style={{
+            padding: '8px 18px', background: 'none',
+            border: '1.5px solid #2c3e50', borderRadius: '8px',
+            color: '#2c3e50', cursor: 'pointer', fontSize: '13px', fontWeight: '600'
+          }}>
+          Edit Profile
+        </button>
+      </div>
 
       <div style={{
         background: 'white', borderRadius: '8px',

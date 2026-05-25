@@ -6,11 +6,11 @@ const { authorize } = require('../middlewares/roleMiddleware');
 
 router.use(protect);
 
-router.post('/', authorize('doctor'), orderLabTest);
-router.get('/', authorize('admin', 'doctor', 'lab_staff', 'nurse'), getAllLabTests);
-router.get('/:id', authorize('admin', 'doctor', 'lab_staff', 'nurse', 'patient'), getLabTestById);
+router.post('/', authorize('doctor', 'admin'), orderLabTest);
+router.get('/', authorize('admin', 'doctor', 'lab_staff', 'nurse', 'patient'), getAllLabTests);
 router.get('/patient/:patientId', authorize('admin', 'doctor', 'lab_staff', 'patient'), getLabTestsByPatient);
-router.put('/:id', authorize('lab_staff', 'doctor'), updateLabTest);
+router.get('/:id', authorize('admin', 'doctor', 'lab_staff', 'nurse', 'patient'), getLabTestById);
+router.put('/:id', authorize('lab_staff', 'doctor', 'admin'), updateLabTest);
 router.delete('/:id', authorize('admin'), deleteLabTest);
 
 module.exports = router;

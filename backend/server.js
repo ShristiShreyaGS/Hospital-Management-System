@@ -47,7 +47,7 @@ const labRoutes = require('./routes/labRoutes');
 app.use('/api/labs', labRoutes);
 
 const pharmacyRoutes = require('./routes/pharmacyRoutes');
-app.use('/api/pharmacies', pharmacyRoutes);
+app.use('/api/pharmacy', pharmacyRoutes);
 
 const staffRoutes = require('./routes/staffRoutes');
 app.use('/api/staff', staffRoutes);

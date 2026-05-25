@@ -22,6 +22,8 @@ function Navbar() {
       { label: 'Departments', path: '/departments' },
       { label: 'Beds', path: '/beds' },
       { label: 'Bills', path: '/bills' },
+      { label: 'EMR', path: '/emr' },
+      { label: 'Lab Tests', path: '/lab' },
     ],
     doctor: [
       { label: 'Dashboard', path: '/dashboard' },
