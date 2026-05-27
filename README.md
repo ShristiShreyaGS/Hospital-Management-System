@@ -525,3 +525,274 @@ For issues, questions, or suggestions:
 - Check the LEARNING_SYLLABUS.md for detailed concepts
 - Review existing code examples
 - Test endpoints with Postman before frontend integration
+
+----------------------------------------------------------------------------------------------------
+
+
+
+
+
+# Hospital Management System (HMS)
+
+## Tech Stack
+
+### Frontend
+- React - UI components
+- Redux - Global state management
+- React Router - Client-side routing
+- Axios - API calls
+- Formik + Yup - Form handling and validation
+- Recharts - Reports and analytics
+
+### Backend
+- Node.js + Express - REST API server
+- MongoDB - Database
+- JWT - Authentication
+- Bcryptjs - Password hashing
+
+---
+
+## Folder Structure
+
+### Backend
+```
+backend/
+├── config/
+│   └── db.js
+├── controllers/
+├── middlewares/
+│   ├── authMiddleware.js
+│   └── roleMiddleware.js
+├── models/
+├── routes/
+├── utils/
+├── .env
+├── package.json
+└── server.js
+```
+
+### Frontend
+```
+client/src/
+├── assets/
+├── components/
+├── features/
+├── pages/
+├── routes/
+├── services/
+└── utils/
+```
+
+---
+
+## Database Schema
+
+### Users
+- name, username, email, password, role, phone, dateOfJoining, isActive
+
+### Patients
+- userId, age, gender, bloodGroup, allergies, address, emergencyContact, contactNumber, currentHealthStatus
+
+### Doctors
+- userId, specialization, degree, yearsOfExperience, successRate, workingDays, workingHours, consultationFee
+
+### Appointments
+- patientId, doctorId, appointmentDate, appointmentTime, status, reason
+
+### Bills
+- patientId, doctorId, items[], amount, paymentMode, paymentStatus, paymentDate
+
+### Departments
+- name, description, location, totalStaff, headDoctorId
+
+### Admission
+- patientId, doctorId, bedId, admissionDate, dischargeDate, status, reason
+
+### Bed
+- bedNumber, ward, room, status, patientId
+
+### EMR
+- patientId, doctorId, diagnosis, treatment, prescription[], attachments[], notes, visitDate
+
+### Lab
+- patientId, doctorId, testName, status, result, reportUrl, requestedDate, completedDate
+
+### Pharmacy
+- medicineName, category, manufacturer, stock, price, lowStockAlert, expiryDate
+
+### Staff
+- userId, departmentId, role, shift, attendance[], joiningDate
+
+### Review
+- patientId, doctorId, rating, feedback, createdAt
+
+### Notification
+- userId, message, type, isRead, createdAt
+
+---
+
+## API Routes
+
+### Auth
+```
+POST   /api/auth/register
+POST   /api/auth/login
+```
+
+### Patients
+```
+POST   /api/patients
+GET    /api/patients
+GET    /api/patients/:id
+PUT    /api/patients/:id
+DELETE /api/patients/:id
+```
+
+### Doctors
+```
+POST   /api/doctors
+GET    /api/doctors
+GET    /api/doctors/:id
+PUT    /api/doctors/:id
+DELETE /api/doctors/:id
+```
+
+### Appointments
+```
+POST   /api/appointments
+GET    /api/appointments
+GET    /api/appointments/:id
+PUT    /api/appointments/:id
+DELETE /api/appointments/:id
+```
+
+### Bills
+```
+POST   /api/bills
+GET    /api/bills
+GET    /api/bills/:id
+PUT    /api/bills/:id
+DELETE /api/bills/:id
+```
+
+### Departments
+```
+POST   /api/departments
+GET    /api/departments
+GET    /api/departments/:id
+PUT    /api/departments/:id
+DELETE /api/departments/:id
+```
+
+### Admissions
+```
+POST   /api/admissions
+GET    /api/admissions
+GET    /api/admissions/:id
+PUT    /api/admissions/:id
+```
+
+### Beds
+```
+POST   /api/beds
+GET    /api/beds
+GET    /api/beds/available
+GET    /api/beds/:id
+PUT    /api/beds/:id
+DELETE /api/beds/:id
+```
+
+### EMR
+```
+POST   /api/emrs
+GET    /api/emrs
+GET    /api/emrs/:id
+GET    /api/emrs/patient/:patientId
+PUT    /api/emrs/:id
+DELETE /api/emrs/:id
+```
+
+### Lab
+```
+POST   /api/labs
+GET    /api/labs
+GET    /api/labs/:id
+GET    /api/labs/patient/:patientId
+PUT    /api/labs/:id
+DELETE /api/labs/:id
+```
+
+### Pharmacy
+```
+POST   /api/pharmacy
+GET    /api/pharmacy
+GET    /api/pharmacy/lowstock
+GET    /api/pharmacy/:id
+PUT    /api/pharmacy/:id
+DELETE /api/pharmacy/:id
+```
+
+### Staff
+```
+POST   /api/staff
+GET    /api/staff
+GET    /api/staff/:id
+PUT    /api/staff/:id
+DELETE /api/staff/:id
+```
+
+### Reviews
+```
+POST   /api/reviews
+GET    /api/reviews
+GET    /api/reviews/:id
+GET    /api/reviews/doctor/:doctorId
+DELETE /api/reviews/:id
+```
+
+### Notifications
+```
+POST   /api/notifications
+GET    /api/notifications/user/:userId
+PUT    /api/notifications/:id/read
+DELETE /api/notifications/:id
+```
+
+---
+
+## Phase Progress
+
+### Phase 1 - Planning ✅
+- Tech stack finalized
+- Folder structure built
+- Database schemas designed
+- API routes planned
+- README documented
+
+### Phase 2 - Backend ✅
+- MongoDB Atlas connected
+- 14 Mongoose models
+- 14 Controllers
+- 14 Route files
+- JWT Authentication
+- Bcrypt password hashing
+- Auth Middleware
+- RBAC Middleware
+- ~65 REST API endpoints
+- Tested in Postman
+- Pushed to GitHub
+
+### Phase 3 - Frontend ⬜ (In Progress)
+- React + Vite initialized
+- All packages installed
+- Folder structure created
+
+---
+
+## Project Statistics
+- Models: 14
+- Controllers: 14
+- Route files: 14
+- API Endpoints: ~65
+- User Roles: 7
+- Middlewares: 2

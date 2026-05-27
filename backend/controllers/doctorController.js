@@ -9,7 +9,7 @@ const addDoctor = async (req, res) => {
       name, username, email, password, phone,
       // Doctor fields
       specialization, degree, yearsOfExperience,
-      successRate, workingDays, workingHours, consultationFee
+      successRate, workingDays, workingHours, consultationFee, departmentId
     } = req.body;
 
     // Check if user already exists
@@ -40,7 +40,8 @@ const addDoctor = async (req, res) => {
       successRate,
       workingDays,
       workingHours,
-      consultationFee
+      consultationFee,
+      departmentId
     });
 
     const populatedDoctor = await Doctor.findById(doctor._id).populate('userId', 'name email')

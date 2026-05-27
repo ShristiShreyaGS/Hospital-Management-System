@@ -15,7 +15,10 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use('/api/payments', require('./routes/paymentRoutes'))
+
+const paymentRoutes = require('./routes/paymentRoutes');
+app.use('/api/payments', paymentRoutes);
+
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
@@ -32,31 +35,39 @@ const billRoutes = require('./routes/billRoutes');
 app.use('/api/bills', billRoutes);
 
 const appointmentRoutes = require('./routes/appointmentRoutes');
-app.use('/api/appointments', appointmentRoutes);
+ app.use('/api/appointments', appointmentRoutes);
 
-const addmissionRoutes = require('./routes/addmissionRoutes');
-app.use('/api/admissions', addmissionRoutes);
+ const addmissionRoutes = require('./routes/addmissionRoutes');
+ app.use('/api/admissions', addmissionRoutes);
 
-const bedRoutes = require('./routes/bedRoutes');
-app.use('/api/beds', bedRoutes);
+ const bedRoutes = require('./routes/bedRoutes');
+ app.use('/api/beds', bedRoutes);
 
-const emrRoutes = require('./routes/emrRoutes');
+ const emrRoutes = require('./routes/emrRoutes');
 app.use('/api/emrs', emrRoutes);
 
-const labRoutes = require('./routes/labRoutes');
-app.use('/api/labs', labRoutes);
+ const labRoutes = require('./routes/labRoutes');
+ app.use('/api/labs', labRoutes);
 
-const pharmacyRoutes = require('./routes/pharmacyRoutes');
-app.use('/api/pharmacy', pharmacyRoutes);
+ const pharmacyRoutes = require('./routes/pharmacyRoutes');
+ app.use('/api/pharmacy', pharmacyRoutes);
 
-const staffRoutes = require('./routes/staffRoutes');
-app.use('/api/staff', staffRoutes);
+ const staffRoutes = require('./routes/staffRoutes');
+ app.use('/api/staff', staffRoutes);
 
 const reviewRoutes = require('./routes/reviewRoutes');
 app.use('/api/reviews', reviewRoutes);
 
-const notificationRoutes = require('./routes/notificationRoutes');
-app.use('/api/notifications', notificationRoutes);
+// const notificationRoutes = require('./routes/notificationRoutes');
+//  app.use('/api/notifications', notificationRoutes);
+ 
+try {
+  const notificationRoutes = require('./routes/notificationRoutes');
+  console.log('notificationRoutes type:', typeof notificationRoutes)
+  app.use('/api/notifications', notificationRoutes);
+} catch(e) {
+  console.error('notificationRoutes error:', e.message)
+}
 
 app.get('/', (req, res) => {
   res.json({ message: 'HMS API is running...' });

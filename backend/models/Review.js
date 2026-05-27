@@ -4,7 +4,12 @@ const reviewSchema = new mongoose.Schema({
   staffId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Staff',
-    required: true
+    default: null
+  },
+  doctorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Doctor',
+    default: null
   },
   reviewerId: {
     type: mongoose.Schema.Types.ObjectId,
