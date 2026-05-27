@@ -24,6 +24,7 @@ function Navbar() {
       { label: 'Bills', path: '/bills' },
       { label: 'EMR', path: '/emr' },
       { label: 'Lab Tests', path: '/lab' },
+
     ],
     doctor: [
       { label: 'Dashboard', path: '/dashboard' },
@@ -31,6 +32,8 @@ function Navbar() {
       { label: 'Patients', path: '/patients' },
       { label: 'EMR', path: '/emr' },
       { label: 'Lab Requests', path: '/lab' },
+      
+{ label: 'My Reviews', path: '/reviews' },
     ],
     patient: [
       { label: 'Dashboard', path: '/dashboard' },
@@ -38,6 +41,8 @@ function Navbar() {
       { label: 'My EMR', path: '/emr' },
       { label: 'Lab Results', path: '/lab' },
       { label: 'My Bills', path: '/bills' },
+{ label: 'Reviews', path: '/reviews' },
+
     ],
     receptionist: [
       { label: 'Dashboard', path: '/dashboard' },

@@ -1,13 +1,15 @@
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { createDoctor } from '../../features/doctors/doctorSlice'
 import { createStaff } from '../../features/staff/staffSlice'
+import { getDepartments } from '../../features/departments/departmentSlice'
 import axios from 'axios'
 
 const API = 'http://localhost:5000/api'
 
 function AddStaffForm({ onClose }) {
   const dispatch = useDispatch()
+  const { departments } = useSelector((state) => state.departments)
 
   const [role, setRole] = useState('doctor')
   const [isLoading, setIsLoading] = useState(false)
@@ -18,8 +20,12 @@ function AddStaffForm({ onClose }) {
     name: '', username: '', email: '', password: '', phone: '',
     specialization: '', degree: '', yearsOfExperience: '',
     successRate: '', workingDays: [], workingHours: '', consultationFee: '',
-    shift: '',
+    shift: '', departmentId: '',
   })
+
+  useEffect(() => {
+    dispatch(getDepartments())
+  }, [dispatch])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -63,6 +69,7 @@ function AddStaffForm({ onClose }) {
           workingDays: formData.workingDays,
           workingHours: formData.workingHours,
           consultationFee: formData.consultationFee,
+          departmentId: formData.departmentId,
         })).unwrap()
 
       } else {
@@ -83,8 +90,8 @@ function AddStaffForm({ onClose }) {
           userId,
           position: roleToPosition[role],   // e.g. 'Nurse', 'Receptionist'
           contactNumber: formData.phone,     // required field in Staff model
+          department: formData.departmentId,
           ...(formData.shift && { shift: formData.shift }),
-          // department omitted — will be added when Department management is built
         })).unwrap()
       }
 
@@ -96,7 +103,7 @@ function AddStaffForm({ onClose }) {
         name: '', username: '', email: '', password: '', phone: '',
         specialization: '', degree: '', yearsOfExperience: '',
         successRate: '', workingDays: [], workingHours: '', consultationFee: '',
-        shift: '',
+        shift: '', departmentId: '',
       })
 
     } catch (err) {
@@ -233,6 +240,15 @@ function AddStaffForm({ onClose }) {
                   </label>
                 ))}
               </div>
+
+              <label style={labelStyle}>Department</label>
+              <select name="departmentId" value={formData.departmentId}
+                onChange={handleChange} style={inputStyle}>
+                <option value="">Select Department</option>
+                {departments?.map(dept => (
+                  <option key={dept._id} value={dept._id}>{dept.name}</option>
+                ))}
+              </select>
             </div>
           )}
 
@@ -248,6 +264,15 @@ function AddStaffForm({ onClose }) {
                 <option value="Morning">Morning</option>
                 <option value="Afternoon">Afternoon</option>
                 <option value="Night">Night</option>
+              </select>
+
+              <label style={labelStyle}>Department</label>
+              <select name="departmentId" value={formData.departmentId}
+                onChange={handleChange} style={inputStyle}>
+                <option value="">Select Department</option>
+                {departments?.map(dept => (
+                  <option key={dept._id} value={dept._id}>{dept.name}</option>
+                ))}
               </select>
             </div>
           )}

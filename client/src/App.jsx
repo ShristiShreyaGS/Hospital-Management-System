@@ -13,10 +13,15 @@ import BillsPage from './pages/BillsPage'
 import EMRPage from './pages/EMRPage'
 import LabPage from './pages/LabPage'
 import PharmacyPage from './pages/PharmacyPage'
+import BedsPage from './pages/BedsPage'
+import AdmissionsPage from './pages/AdmissionsPage'
+import DepartmentsPage from './pages/DepartmentsPage'
 import ProfilePage from './pages/ProfilePage'
 import PatientProfilePage from './pages/PatientProfilePage'
 import DoctorProfilePage from './pages/DoctorProfilePage'
 import StaffProfilePage from './pages/StaffProfilePage'
+import ReviewsPage from './pages/ReviewsPage'
+
 
 function App() {
   return (
@@ -107,6 +112,33 @@ function App() {
           </PrivateRoute>
         } />
 
+        {/* Beds — admin and receptionist only */}
+        <Route path="/beds" element={
+          <PrivateRoute>
+            <RoleRoute allowedRoles={['admin', 'receptionist']}>
+              <BedsPage />
+            </RoleRoute>
+          </PrivateRoute>
+        } />
+
+        {/* Departments — admin only */}
+        <Route path="/departments" element={
+          <PrivateRoute>
+            <RoleRoute allowedRoles={['admin']}>
+              <DepartmentsPage />
+            </RoleRoute>
+          </PrivateRoute>
+        } />
+
+        {/* Admissions — receptionist and admin only */}
+        <Route path="/admissions" element={
+          <PrivateRoute>
+            <RoleRoute allowedRoles={['admin', 'receptionist', 'nurse']}>
+              <AdmissionsPage />
+            </RoleRoute>
+          </PrivateRoute>
+        } />
+
         {/* Profile Pages */}
         <Route path="/profile" element={
           <PrivateRoute>
@@ -135,6 +167,12 @@ function App() {
             <RoleRoute allowedRoles={['receptionist', 'nurse', 'lab_staff', 'pharmacist']}>
               <StaffProfilePage />
             </RoleRoute>
+          </PrivateRoute>
+        } />
+
+        <Route path="/reviews" element={
+          <PrivateRoute>
+            <ReviewsPage />
           </PrivateRoute>
         } />
       </Routes>

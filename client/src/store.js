@@ -9,6 +9,10 @@ import departmentReducer from './features/departments/departmentSlice'
 import emrReducer from './features/emr/emrSlice'
 import labReducer from './features/lab/labSlice'
 import pharmacyReducer from './features/pharmacy/pharmacySlice'
+import admissionReducer from './features/admissions/admissionSlice'
+import bedReducer from './features/beds/bedSlice'
+import reviewReducer from './features/reviews/reviewSlice'
+
 
 const store = configureStore({
   reducer: {
@@ -22,6 +26,9 @@ const store = configureStore({
     emr: emrReducer,
     lab: labReducer,
     pharmacy: pharmacyReducer,
+    admissions: admissionReducer,
+    beds: bedReducer,
+    reviews: reviewReducer,
   },
 })
 
