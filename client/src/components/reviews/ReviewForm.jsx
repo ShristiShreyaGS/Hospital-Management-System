@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { createReview, updateReview } from '../../features/reviews/reviewSlice'
+import { createReview, updateReview, getReviews } from '../../features/reviews/reviewSlice'
 import { getStaff } from '../../features/staff/staffSlice'
 import { getDoctors } from '../../features/doctors/doctorSlice'
 import { getAppointments } from '../../features/appointments/appointmentSlice'
@@ -117,6 +117,8 @@ function ReviewForm({ reviewToEdit, onClose }) {
           reviewData.staffId = formData.staffId
         }
         await dispatch(createReview(reviewData)).unwrap()
+        // Refetch all reviews to show complete list
+        await dispatch(getReviews()).unwrap()
       }
       onClose()
     } catch (err) {

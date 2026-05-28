@@ -63,7 +63,9 @@ const reviewSlice = createSlice({
         state.error = action.payload
       })
       .addCase(createReview.fulfilled, (state, action) => {
-        state.reviews.unshift(action.payload)
+        // Don't manually add - let getReviews fetch all reviews instead
+        // This ensures the complete list is always in sync with the server
+        state.error = null
       })
       .addCase(createReview.rejected, (state, action) => {
         state.error = action.payload

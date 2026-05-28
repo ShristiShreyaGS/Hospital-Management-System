@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getReviews, deleteReview } from '../../features/reviews/reviewSlice'
 
-function ReviewList({ onEdit }) {
+function ReviewList({ onEdit, filterType, filterId }) {
   const dispatch = useDispatch()
   const { reviews, isLoading } = useSelector((state) => state.reviews)
   const { user } = useSelector((state) => state.auth)
@@ -27,17 +27,35 @@ function ReviewList({ onEdit }) {
     'General': '#95a5a6',
   }
 
+  // Filter reviews based on user role and filter criteria
+  let filteredReviews = reviews
+  if (filterType === 'doctorId' && filterId) {
+    filteredReviews = reviews.filter(r => r.doctorId?._id === filterId)
+  } else if (filterType === 'staffId' && filterId) {
+    filteredReviews = reviews.filter(r => r.staffId?._id === filterId)
+  }
+
   if (isLoading) return <p style={{ padding: '20px', color: '#7f8c8d' }}>Loading reviews...</p>
 
   return (
     <div>
-      {reviews.length === 0 ? (
+      {filteredReviews.length === 0 ? (
         <p style={{ textAlign: 'center', padding: '40px', color: '#7f8c8d' }}>
           No reviews found
         </p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {reviews.map((review) => (
+          {filteredReviews.map((review) => {
+            // Determine if this is a doctor or staff review
+            const isDoctor = review.doctorId && !review.staffId
+            const name = isDoctor 
+              ? review.doctorId?.userId?.name || 'Unknown Doctor'
+              : review.staffId?.userId?.name || 'Unknown Staff'
+            const position = isDoctor
+              ? review.doctorId?.specialization || ''
+              : review.staffId?.position || ''
+            
+            return (
             <div key={review._id} style={{
               background: 'white', borderRadius: '8px',
               padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
@@ -45,11 +63,14 @@ function ReviewList({ onEdit }) {
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
-                  {/* Staff name */}
+                  {/* Staff/Doctor name */}
                   <h4 style={{ color: '#2c3e50', margin: '0 0 4px', fontSize: '15px' }}>
-                    {review.staffId?.userId?.name || 'Unknown Staff'}
+                    {name}
                     <span style={{ color: '#7f8c8d', fontWeight: '400', fontSize: '13px' }}>
-                      {' '}— {review.staffId?.position || ''}
+                      {position ? ` — ${position}` : ''}
+                    </span>
+                    <span style={{ color: '#95a5a6', fontWeight: '400', fontSize: '12px', marginLeft: '8px' }}>
+                      ({isDoctor ? 'Doctor' : 'Staff'})
                     </span>
                   </h4>
 
@@ -104,7 +125,8 @@ function ReviewList({ onEdit }) {
                 </div>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>
