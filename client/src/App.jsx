@@ -21,6 +21,7 @@ import PatientProfilePage from './pages/PatientProfilePage'
 import DoctorProfilePage from './pages/DoctorProfilePage'
 import StaffProfilePage from './pages/StaffProfilePage'
 import ReviewsPage from './pages/ReviewsPage'
+import NotificationsPage from './pages/NotificationsPage'
 
 
 function App() {
@@ -173,6 +174,12 @@ function App() {
         <Route path="/reviews" element={
           <PrivateRoute>
             <ReviewsPage />
+          </PrivateRoute>
+        } />
+
+        <Route path="/notifications" element={
+          <PrivateRoute>
+            <NotificationsPage />
           </PrivateRoute>
         } />
       </Routes>

@@ -12,6 +12,7 @@ import pharmacyReducer from './features/pharmacy/pharmacySlice'
 import admissionReducer from './features/admissions/admissionSlice'
 import bedReducer from './features/beds/bedSlice'
 import reviewReducer from './features/reviews/reviewSlice'
+import notificationReducer from './features/notifications/notificationSlice'
 
 
 const store = configureStore({
@@ -29,6 +30,7 @@ const store = configureStore({
     admissions: admissionReducer,
     beds: bedReducer,
     reviews: reviewReducer,
+    notifications: notificationReducer,
   },
 })
 

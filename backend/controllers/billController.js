@@ -1,6 +1,7 @@
 const Bill = require('../models/Bill');
 const Patient = require('../models/Patient');
 const Doctor = require('../models/Doctor');
+const createNotification = require('../utils/notificationHelper')
 
 const populateBill = (query) => query
   .populate({ path: 'patientId', populate: { path: 'userId', select: 'name email' } })
@@ -13,6 +14,23 @@ const addBill = async (req, res) => {
     const bill = await Bill.create({
       patientId, doctorId, items, amount, paymentMode, paymentStatus, paymentDate
     });
+
+    // Notify patient of bill generation
+    try {
+      const patient = await Patient.findById(patientId).populate('userId', '_id')
+      if (patient?.userId) {
+        await createNotification({
+          userId: patient.userId._id,
+          title: 'Bill Generated',
+          message: `A bill of ₹${amount} has been generated for your medical services`,
+          type: 'Bill',
+          priority: 'Medium',
+          relatedEntity: 'Bill',
+          relatedEntityId: bill._id,
+          actionUrl: '/bills'
+        })
+      }
+    } catch (e) { console.error('Notification error:', e.message) }
 
     const populated = await populateBill(Bill.findById(bill._id))
     res.status(201).json({ message: 'Bill created successfully', bill: populated });

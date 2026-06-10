@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 import { logout } from '../features/auth/authSlice'
+import NotificationBell from './notifications/NotificationBell'
 
 function Navbar() {
   const dispatch = useDispatch()
@@ -126,6 +127,7 @@ function Navbar() {
             }}>{user.role}</span>
           </span>
         )}
+        <NotificationBell />
         <button onClick={handleLogout} style={{
           padding: '6px 16px',
           background: '#e74c3c',

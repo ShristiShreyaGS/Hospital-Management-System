@@ -1,5 +1,7 @@
 const Admission = require('../models/Admission');
 const Bed = require('../models/Bed');
+const Patient = require('../models/Patient');
+const createNotification = require('../utils/notificationHelper')
 
 const populateAdmission = (query) => query
   .populate({ path: 'patientId', populate: { path: 'userId', select: 'name' } })
@@ -19,6 +21,23 @@ const admitPatient = async (req, res) => {
     const admission = await Admission.create({ patientId, doctorId, bedId, reason });
     await Bed.findByIdAndUpdate(bedId, { status: 'Occupied', patientId })
 
+    // Notify patient of admission
+    try {
+      const patient = await Patient.findById(patientId).populate('userId', '_id')
+      if (patient?.userId) {
+        await createNotification({
+          userId: patient.userId._id,
+          title: 'Hospital Admission',
+          message: `You have been admitted to the hospital. Reason: ${reason}`,
+          type: 'Admission',
+          priority: 'High',
+          relatedEntity: 'Admission',
+          relatedEntityId: admission._id,
+          actionUrl: '/admissions'
+        })
+      }
+    } catch (e) { console.error('Notification error:', e.message) }
+
     const populated = await populateAdmission(Admission.findById(admission._id))
     res.status(201).json({ message: 'Patient admitted successfully', admission: populated });
   } catch (error) {
@@ -28,14 +47,33 @@ const admitPatient = async (req, res) => {
 
 const dischargePatient = async (req, res) => {
   try {
+    const existing = await Admission.findById(req.params.id);
+    if (!existing) return res.status(404).json({ message: 'Admission not found' });
+
     const admission = await Admission.findByIdAndUpdate(
       req.params.id,
       { status: 'Discharged', dischargeDate: Date.now() },
       { new: true }
     );
-    if (!admission) return res.status(404).json({ message: 'Admission not found' });
 
     await Bed.findByIdAndUpdate(admission.bedId, { status: 'Available', patientId: null })
+
+    // Notify patient of discharge
+    try {
+      const patient = await Patient.findById(existing.patientId).populate('userId', '_id')
+      if (patient?.userId) {
+        await createNotification({
+          userId: patient.userId._id,
+          title: 'Hospital Discharge',
+          message: 'You have been discharged from the hospital. Please follow the aftercare instructions.',
+          type: 'Admission',
+          priority: 'Medium',
+          relatedEntity: 'Admission',
+          relatedEntityId: existing._id,
+          actionUrl: '/admissions'
+        })
+      }
+    } catch (e) { console.error('Notification error:', e.message) }
 
     const populated = await populateAdmission(Admission.findById(admission._id))
     res.status(200).json({ message: 'Patient discharged successfully', admission: populated });

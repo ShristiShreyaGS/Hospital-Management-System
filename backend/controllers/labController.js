@@ -1,6 +1,7 @@
 const Lab = require('../models/Lab');
 const Doctor = require('../models/Doctor');
 const Patient = require('../models/Patient');
+const createNotification = require('../utils/notificationHelper')
 
 const populateLab = (query) => query
   .populate({ path: 'patientId', populate: { path: 'userId', select: 'name' } })
@@ -71,10 +72,32 @@ const getLabTestsByPatient = async (req, res) => {
 
 const updateLabTest = async (req, res) => {
   try {
+    const existing = await Lab.findById(req.params.id);
+    if (!existing) return res.status(404).json({ message: 'Lab test not found' });
+
     const lab = await populateLab(
       Lab.findByIdAndUpdate(req.params.id, req.body, { new: true })
     )
-    if (!lab) return res.status(404).json({ message: 'Lab test not found' });
+
+    // Notify patient when lab test is completed
+    try {
+      if (req.body.status === 'Completed' && existing.status !== 'Completed') {
+        const patient = await Patient.findById(existing.patientId).populate('userId', '_id')
+        if (patient?.userId) {
+          await createNotification({
+            userId: patient.userId._id,
+            title: 'Lab Test Results Ready',
+            message: `Your ${existing.testType} lab test results are ready for review`,
+            type: 'Lab',
+            priority: 'High',
+            relatedEntity: 'Lab',
+            relatedEntityId: existing._id,
+            actionUrl: '/lab'
+          })
+        }
+      }
+    } catch (e) { console.error('Notification error:', e.message) }
+
     res.status(200).json({ message: 'Lab test updated successfully', lab });
   } catch (error) {
     res.status(500).json({ message: error.message });

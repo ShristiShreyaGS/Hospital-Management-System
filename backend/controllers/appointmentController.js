@@ -1,6 +1,7 @@
 const Appointment = require('../models/Appointment');
 const Patient = require('../models/Patient');
 const Doctor = require('../models/Doctor');
+const createNotification = require('../utils/notificationHelper')
 
 const addAppointment = async (req, res) => {
   try {
@@ -25,6 +26,23 @@ const addAppointment = async (req, res) => {
       appointmentTime,
       reason,
     });
+
+    // Notify patient
+    try {
+      const patient = await Patient.findById(resolvedPatientId).populate('userId', '_id name')
+      if (patient?.userId) {
+        await createNotification({
+          userId: patient.userId._id,
+          title: 'Appointment Booked',
+          message: `Your appointment has been booked for ${new Date(appointmentDate).toLocaleDateString('en-IN')} at ${appointmentTime}`,
+          type: 'Appointment',
+          priority: 'Medium',
+          relatedEntity: 'Appointment',
+          relatedEntityId: appointment._id,
+          actionUrl: '/appointments'
+        })
+      }
+    } catch (e) { console.error('Notification error:', e.message) }
 
     const populated = await Appointment.findById(appointment._id)
       .populate({ path: 'patientId', populate: { path: 'userId', select: 'name' } })
@@ -161,6 +179,25 @@ const updateAppointment = async (req, res) => {
     )
       .populate({ path: 'patientId', populate: { path: 'userId', select: 'name' } })
       .populate({ path: 'doctorId', populate: { path: 'userId', select: 'name' }, select: 'userId specialization' });
+
+    // Notify patient on status change
+    try {
+      if (req.body.status) {
+        const patient = await Patient.findById(existing.patientId).populate('userId', '_id')
+        if (patient?.userId) {
+          await createNotification({
+            userId: patient.userId._id,
+            title: 'Appointment Updated',
+            message: `Your appointment status has been updated to ${req.body.status}`,
+            type: 'Appointment',
+            priority: req.body.status === 'Cancelled' ? 'High' : 'Medium',
+            relatedEntity: 'Appointment',
+            relatedEntityId: existing._id,
+            actionUrl: '/appointments'
+          })
+        }
+      }
+    } catch (e) { console.error('Notification error:', e.message) }
 
     res.status(200).json({ message: 'Appointment updated successfully', appointment });
   } catch (error) {
