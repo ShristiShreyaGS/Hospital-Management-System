@@ -55,7 +55,6 @@ function AddStaffForm({ onClose }) {
 
     try {
       if (role === 'doctor') {
-        // doctorController creates User + Doctor in one call
         await dispatch(createDoctor({
           name: formData.name,
           username: formData.username,
@@ -73,7 +72,6 @@ function AddStaffForm({ onClose }) {
         })).unwrap()
 
       } else {
-        // Step 1: Register user — public route, no token needed
         const userRes = await axios.post(`${API}/auth/register`, {
           name: formData.name,
           username: formData.username,
@@ -85,7 +83,6 @@ function AddStaffForm({ onClose }) {
 
         const userId = userRes.data.userId
 
-        // Step 2: Create staff profile
         await dispatch(createStaff({
           userId,
           position: roleToPosition[role],   // e.g. 'Nurse', 'Receptionist'
