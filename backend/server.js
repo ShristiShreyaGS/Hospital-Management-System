@@ -8,9 +8,13 @@ connectDB();
 
 const app = express();
 
-// CORS middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3000'],
+  origin: [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'http://localhost:3000',
+    'https://hospital-management-system-sigma-three.vercel.app'
+  ],
   credentials: true,
 }));
 
