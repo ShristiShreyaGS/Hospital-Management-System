@@ -65,13 +65,8 @@ app.use('/api/reviews', reviewRoutes);
 // const notificationRoutes = require('./routes/notificationRoutes');
 //  app.use('/api/notifications', notificationRoutes);
  
-try {
-  const notificationRoutes = require('./routes/notificationRoutes');
-  console.log('notificationRoutes type:', typeof notificationRoutes)
-  app.use('/api/notifications', notificationRoutes);
-} catch(e) {
-  console.error('notificationRoutes error:', e.message)
-}
+const notificationRoutes = require('./routes/notificationRoutes');
+app.use('/api/notifications', notificationRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'HMS API is running...' });
