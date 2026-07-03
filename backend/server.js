@@ -8,13 +8,29 @@ connectDB();
 
 const app = express();
 
+// Dynamic CORS configuration to handle all Vercel deployments
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:3000',
+  'https://hospital-management-system-sigma-three.vercel.app'
+];
+
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    'http://localhost:3000',
-    'https://hospital-management-system-sigma-three.vercel.app'
-  ],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Allow if in whitelist
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    
+    // Allow all Vercel preview deployments
+    if (origin.includes('.vercel.app')) return callback(null, true);
+    
+    // Otherwise, deny
+    const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+    return callback(new Error(msg), false);
+  },
   credentials: true,
 }));
 
