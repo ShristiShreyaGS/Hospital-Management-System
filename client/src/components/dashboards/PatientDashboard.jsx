@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { getPatients } from '../../features/patients/patientSlice'
+import { getMyProfile } from '../../features/patients/patientSlice'
 import { getLabTests } from '../../features/lab/labSlice'
 import { fetchCurrentUser } from '../../features/auth/authSlice'
 
@@ -148,25 +148,19 @@ function PatientDashboard() {
   const navigate = useNavigate()
 
   const { user } = useSelector((state) => state.auth)
-  const { patients, isLoading } = useSelector((state) => state.patients)
+  const { patient, isLoading } = useSelector((state) => state.patients)
   const { labs } = useSelector((state) => state.lab)
 
   useEffect(() => {
     // Restore full user data on page refresh (in case only token info is available)
     dispatch(fetchCurrentUser())
     
-    // Fetch patient and lab data
-    if (!patients || patients.length === 0) {
-      dispatch(getPatients())
-    }
+    // Fetch current user's patient profile
+    dispatch(getMyProfile())
     dispatch(getLabTests())
-  }, [dispatch, patients])
+  }, [dispatch])
 
-  const myProfile = patients?.find(
-    (p) =>
-      p.userId?._id === user?.id ||
-      p.userId?.email === user?.email
-  )
+  const myProfile = patient
   return (
     <>
       <style>{styles}</style>

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { 
+    getMyProfile,
     addPatient, 
     getAllPatients, 
     getPatientById, 
@@ -12,6 +13,7 @@ const { protect } = require('../middlewares/authMiddleware');
 const { authorize } = require('../middlewares/roleMiddleware');
 
 router.use(protect);
+router.get('/me', getMyProfile);
 router.post('/', authorize('admin', 'receptionist'), addPatient);
 router.get('/', authorize('admin', 'receptionist', 'doctor', 'nurse', 'patient'), getAllPatients);
 router.get('/:id', authorize('admin', 'receptionist', 'doctor', 'nurse', 'patient'), getPatientById);

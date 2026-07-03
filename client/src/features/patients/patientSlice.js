@@ -18,6 +18,16 @@ export const getPatients = createAsyncThunk('patients/getAll', async (_, thunkAP
   }
 })
 
+// Get current user's patient profile
+export const getMyProfile = createAsyncThunk('patients/getMyProfile', async (_, thunkAPI) => {
+  try {
+    const res = await axios.get(`${API}/patients/me`, config())
+    return res.data
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err.response.data.message)
+  }
+})
+
 // Get single patient
 export const getPatient = createAsyncThunk('patients/getOne', async (id, thunkAPI) => {
   try {
@@ -80,6 +90,16 @@ const patientSlice = createSlice({
         state.patients = action.payload
       })
       .addCase(getPatients.rejected, (state, action) => {
+        state.isLoading = false
+        state.error = action.payload
+      })
+      // Get my profile
+      .addCase(getMyProfile.pending, (state) => { state.isLoading = true })
+      .addCase(getMyProfile.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.patient = action.payload
+      })
+      .addCase(getMyProfile.rejected, (state, action) => {
         state.isLoading = false
         state.error = action.payload
       })

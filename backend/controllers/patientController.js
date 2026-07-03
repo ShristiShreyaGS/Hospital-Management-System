@@ -1,5 +1,18 @@
 const Patient = require('../models/Patient');
 
+// Get current user's patient profile
+const getMyProfile = async (req, res) => {
+  try {
+    const patient = await Patient.findOne({ userId: req.user.id }).populate('userId', 'name email phone role');
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient profile not found' });
+    }
+    res.status(200).json(patient);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Add new patient
 const addPatient = async (req, res) => {
   try {
@@ -87,4 +100,4 @@ const deletePatient = async (req, res) => {
   }
 };
 
-module.exports = { addPatient, getAllPatients, getPatientById, updatePatient, deletePatient };
+module.exports = { getMyProfile, addPatient, getAllPatients, getPatientById, updatePatient, deletePatient };

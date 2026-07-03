@@ -9,7 +9,7 @@ export const getNotifications = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${API_BASE_URL}/notifications`, {
+      const response = await axios.get(`${API}/notifications`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       return response.data.notifications || [];
@@ -25,7 +25,7 @@ export const markAsRead = createAsyncThunk(
     try {
       const token = localStorage.getItem('token');
       const response = await axios.patch(
-        `${API_BASE_URL}/notifications/${notificationId}/read`,
+        `${API}/notifications/${notificationId}/read`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -42,7 +42,7 @@ export const markAllAsRead = createAsyncThunk(
     try {
       const token = localStorage.getItem('token');
       await axios.patch(
-        `${API_BASE_URL}/notifications/read-all`,
+        `${API}/notifications/read-all`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -59,7 +59,7 @@ export const deleteNotification = createAsyncThunk(
     try {
       const token = localStorage.getItem('token');
       await axios.delete(
-        `${API_BASE_URL}/notifications/${notificationId}`,
+        `${API}/notifications/${notificationId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       return notificationId;
@@ -75,7 +75,7 @@ export const deleteAllNotifications = createAsyncThunk(
     try {
       const token = localStorage.getItem('token');
       await axios.delete(
-        `${API_BASE_URL}/notifications`,
+        `${API}/notifications`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       return true;
