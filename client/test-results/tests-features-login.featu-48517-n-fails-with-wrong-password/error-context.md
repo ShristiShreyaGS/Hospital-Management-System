@@ -6,8 +6,8 @@
 
 # Test info
 
-- Name: tests\features\login.feature.spec.js >> User Login >> Successful login with valid credentials
-- Location: .features-gen\tests\features\login.feature.spec.js:6:3
+- Name: tests\features\login.feature.spec.js >> User Login >> Login fails with wrong password
+- Location: .features-gen\tests\features\login.feature.spec.js:13:3
 
 # Error details
 

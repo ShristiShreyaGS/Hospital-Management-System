@@ -8,4 +8,4 @@ router.post('/login', loginUser);
 router.get('/me', protect, getCurrentUser);
 router.put('/profile', protect, updateUserProfile);
 
-module.exports = router;
+module.exports = router;     
