@@ -4,8 +4,9 @@ import { createDoctor } from '../../features/doctors/doctorSlice'
 import { createStaff } from '../../features/staff/staffSlice'
 import { getDepartments } from '../../features/departments/departmentSlice'
 import axios from 'axios'
+import { API_BASE } from '../../utils/apiBase'
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+const API = API_BASE
 
 function AddStaffForm({ onClose }) {
   const dispatch = useDispatch()

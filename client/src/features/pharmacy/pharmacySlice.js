@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
+import { API_BASE } from '../../utils/apiBase'
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+const API = API_BASE
 
 const getToken = () => localStorage.getItem('token')
 const config = () => ({ headers: { Authorization: `Bearer ${getToken()}` } })
