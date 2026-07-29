@@ -5,7 +5,7 @@ import { createStaff } from '../../features/staff/staffSlice'
 import { getDepartments } from '../../features/departments/departmentSlice'
 import axios from 'axios'
 
-const API = 'http://localhost:5000/api'
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
 function AddStaffForm({ onClose }) {
   const dispatch = useDispatch()
