@@ -14,7 +14,12 @@ const registerUser = async (req, res) => {
 
     const userExists = await User.findOne({ email });
     if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: 'Email already in use' });
+    }
+
+    const usernameExists = await User.findOne({ username });
+    if (usernameExists) {
+      return res.status(400).json({ message: 'Username already in use' });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -51,6 +56,21 @@ const registerUser = async (req, res) => {
     });
 
   } catch (error) {
+    if (error?.code === 11000) {
+      const duplicateField = Object.keys(error.keyPattern || {})[0];
+      if (duplicateField === 'email') {
+        return res.status(400).json({ message: 'Email already in use' });
+      }
+      if (duplicateField === 'username') {
+        return res.status(400).json({ message: 'Username already in use' });
+      }
+      return res.status(400).json({ message: 'Duplicate value detected' });
+    }
+
+    if (error?.name === 'ValidationError') {
+      return res.status(400).json({ message: error.message });
+    }
+
     res.status(500).json({ message: error.message });
   }
 };
