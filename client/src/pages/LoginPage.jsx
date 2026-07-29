@@ -35,8 +35,6 @@ function LoginPage() {
 
   return (
     <>
-      <style>{styles}</style>
-
       <div className="login-root">
 
         {/* Left Panel */}

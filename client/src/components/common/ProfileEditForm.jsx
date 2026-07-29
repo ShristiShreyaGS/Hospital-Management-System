@@ -75,7 +75,6 @@ function ProfileEditForm() {
 
   return (
     <>
-      <style>{styles}</style>
       <form className="profile-edit-form" onSubmit={handleSubmit}>
         <h2 style={{ color: '#0f2d4a', marginBottom: '25px', fontSize: '22px' }}>Edit Profile</h2>
 
