@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUserProfile } from '../../features/auth/authSlice'
+import './ProfileEditForm.css'
 
 function ProfileEditForm() {
   const dispatch = useDispatch()
@@ -71,8 +72,6 @@ function ProfileEditForm() {
       setMessage('Failed to update profile')
     }
   }
-
-  import './ProfileEditForm.css';
 
   return (
     <>
