@@ -3,6 +3,25 @@ const Patient = require('../models/Patient');
 const Doctor = require('../models/Doctor');
 const createNotification = require('../utils/notificationHelper')
 
+const ensurePatientProfile = async (userId) => {
+  let patient = await Patient.findOne({ userId });
+  if (patient) return patient;
+
+  // Backfill legacy patient users that were created without a Patient profile.
+  patient = await Patient.create({
+    userId,
+    age: 0,
+    gender: 'Other',
+    emergencyContact: 'Not Provided',
+    contactNumber: 'Not Provided',
+    currentHealthStatus: 'Healthy',
+    address: 'Not Provided',
+    allergies: [],
+  });
+
+  return patient;
+};
+
 const addAppointment = async (req, res) => {
   try {
     const { patientId, doctorId, appointmentDate, appointmentTime, reason } = req.body;
@@ -10,8 +29,7 @@ const addAppointment = async (req, res) => {
 
     let resolvedPatientId = patientId;
     if (role === 'patient') {
-      const patient = await Patient.findOne({ userId });
-      if (!patient) return res.status(404).json({ message: 'Patient profile not found' });
+      const patient = await ensurePatientProfile(userId);
       resolvedPatientId = patient._id;
     }
 
@@ -70,8 +88,7 @@ const getAllAppointments = async (req, res) => {
     let filter = {};
 
     if (role === 'patient') {
-      const patient = await Patient.findOne({ userId });
-      if (!patient) return res.status(404).json({ message: 'Patient profile not found' });
+      const patient = await ensurePatientProfile(userId);
       filter.patientId = patient._id;
     } else if (role === 'doctor') {
       const doctor = await Doctor.findOne({ userId });
@@ -134,7 +151,7 @@ const getAppointmentById = async (req, res) => {
     if (!appointment) return res.status(404).json({ message: 'Appointment not found' });
 
     if (role === 'patient') {
-      const patient = await Patient.findOne({ userId });
+      const patient = await ensurePatientProfile(userId);
       if (!patient || appointment.patientId._id.toString() !== patient._id.toString())
         return res.status(403).json({ message: 'Access denied' });
     }
@@ -159,7 +176,7 @@ const updateAppointment = async (req, res) => {
     if (!existing) return res.status(404).json({ message: 'Appointment not found' });
 
     if (role === 'patient') {
-      const patient = await Patient.findOne({ userId });
+      const patient = await ensurePatientProfile(userId);
       if (!patient || existing.patientId.toString() !== patient._id.toString())
         return res.status(403).json({ message: 'Access denied' });
     }
@@ -216,7 +233,7 @@ const deleteAppointment = async (req, res) => {
       return res.status(403).json({ message: 'Doctors cannot delete appointments' });
 
     if (role === 'patient') {
-      const patient = await Patient.findOne({ userId });
+      const patient = await ensurePatientProfile(userId);
       if (!patient || existing.patientId.toString() !== patient._id.toString())
         return res.status(403).json({ message: 'Access denied' });
     }
