@@ -1,4 +1,4 @@
-const PROD_API_FALLBACK = 'https://hospital-management-system-7e8k.onrender.com/api'
+const PROD_API_FALLBACK = '/api'
 const LOCAL_API_FALLBACK = 'http://localhost:5000/api'
 
 const isLocalhost = () => {
