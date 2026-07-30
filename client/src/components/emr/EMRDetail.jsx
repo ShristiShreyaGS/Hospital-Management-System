@@ -22,7 +22,7 @@ function EMRDetail({ emrId, onClose }) {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <h3 style={{ color: '#2c3e50', margin: 0 }}>Medical Record</h3>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#7f8c8d' }}>✕</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '14px', cursor: 'pointer', color: '#7f8c8d' }}>Close</button>
         </div>
 
         {/* Patient + Doctor */}

@@ -71,7 +71,7 @@ const NotificationsPage = () => {
                       onClick={() => handleMarkAsRead(notification._id)}
                       title="Mark as read"
                     >
-                      ✓
+                      Mark Read
                     </button>
                   )}
                   <button
@@ -79,7 +79,7 @@ const NotificationsPage = () => {
                     onClick={() => handleDelete(notification._id)}
                     title="Delete"
                   >
-                    ✕
+                    Delete
                   </button>
                 </div>
               </div>
@@ -106,7 +106,7 @@ const NotificationsPage = () => {
         </div>
       ) : (
         <div className="empty-state">
-          <div className="empty-icon">📭</div>
+          <div className="empty-icon">No Alerts</div>
           <p>No notifications yet</p>
         </div>
       )}

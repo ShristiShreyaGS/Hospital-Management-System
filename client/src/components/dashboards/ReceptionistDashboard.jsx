@@ -78,8 +78,8 @@ function ReceptionistDashboard() {
           {[
             { label: '+ New Appointment', path: '/appointments', color: '#2980b9' },
             { label: '+ Register Patient', path: '/patients', color: '#27ae60' },
-            { label: '💰 Generate Bill', path: '/bills', color: '#e67e22' },
-            { label: '🛏 Manage Beds', path: '/beds', color: '#8e44ad' },
+            { label: 'Generate Bill', path: '/bills', color: '#e67e22' },
+            { label: 'Manage Beds', path: '/beds', color: '#8e44ad' },
           ].map((action) => (
             <button key={action.label} onClick={() => navigate(action.path)} style={{
               padding: '10px 20px', background: action.color,

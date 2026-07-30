@@ -16,7 +16,7 @@ function ReviewList({ onEdit, filterType, filterId }) {
   }
 
   const renderStars = (rating) => {
-    return '★'.repeat(rating) + '☆'.repeat(5 - rating)
+    return `Rating: ${rating}/5`
   }
 
   const categoryColor = {

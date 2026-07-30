@@ -41,13 +41,13 @@ function DepartmentList({ onEdit }) {
               {dept.name}
             </h4>
             <p style={{ color: '#7f8c8d', fontSize: '13px', margin: '0 0 8px' }}>
-              📍 {dept.location}
+              Location: {dept.location}
             </p>
             <p style={{ color: '#7f8c8d', fontSize: '13px', margin: '0 0 8px' }}>
-              👨‍⚕️ Head: {dept.headDoctorId?.userId?.name || 'Not assigned'}
+              Head: {dept.headDoctorId?.userId?.name || 'Not assigned'}
             </p>
             <p style={{ color: '#7f8c8d', fontSize: '13px', margin: '0 0 12px' }}>
-              👥 Staff: {dept.totalStaff}
+              Staff: {dept.totalStaff}
             </p>
             <p style={{ color: '#95a5a6', fontSize: '12px', margin: '0 0 16px' }}>
               {dept.description}

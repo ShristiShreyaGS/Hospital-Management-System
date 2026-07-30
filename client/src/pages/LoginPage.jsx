@@ -41,7 +41,7 @@ function LoginPage() {
         <div className="login-panel">
 
           <div className="login-logo">
-            <div className="login-logo-icon">🏥</div>
+            <div className="login-logo-icon">H</div>
             <span className="login-logo-text">HMS</span>
           </div>
 

@@ -43,7 +43,7 @@ function PharmacyPage() {
             marginBottom: '20px', display: 'flex',
             alignItems: 'center', gap: '10px'
           }}>
-            <span style={{ fontSize: '18px' }}>⚠️</span>
+            <span style={{ fontSize: '12px', fontWeight: '700', color: '#e74c3c' }}>ALERT</span>
             <span style={{ color: '#e74c3c', fontWeight: '600' }}>
               {lowStock.length} medicine{lowStock.length > 1 ? 's' : ''} running low on stock:
             </span>

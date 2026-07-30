@@ -32,7 +32,7 @@ function PharmacistDashboard() {
         <h3 style={{ color: '#2c3e50', marginBottom: '16px' }}>Quick Actions</h3>
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
           {[
-            { label: '💊 Pharmacy Inventory', path: '/pharmacy', color: '#27ae60' },
+            { label: 'Pharmacy Inventory', path: '/pharmacy', color: '#27ae60' },
           ].map((action) => (
             <button key={action.label} onClick={() => navigate(action.path)} style={{
               padding: '10px 20px', background: action.color,

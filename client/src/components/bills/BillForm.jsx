@@ -161,7 +161,7 @@ function BillForm({ billToEdit, onClose }) {
                   <button type="button" onClick={() => removeItem(index)} style={{
                     padding: '8px', background: '#e74c3c',
                     color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer'
-                  }}>✕</button>
+                  }}>Remove</button>
                 )}
               </div>
             ))}

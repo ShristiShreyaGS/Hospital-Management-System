@@ -36,7 +36,7 @@ function AppointmentDetail({ appointmentId, onClose }) {
           <button onClick={onClose} style={{
             background: 'none', border: 'none',
             fontSize: '20px', cursor: 'pointer', color: '#7f8c8d'
-          }}>✕</button>
+          }}>Close</button>
         </div>
 
         {/* Status Badge */}

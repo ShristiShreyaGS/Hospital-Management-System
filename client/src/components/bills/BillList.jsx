@@ -110,7 +110,7 @@ function BillList({ onEdit }) {
                     {/* Paid badge — no actions */}
                     {bill.paymentStatus === 'Paid' && (
                       <span style={{ color: '#27ae60', fontWeight: '600', fontSize: '13px' }}>
-                        ✓ Paid
+                        Paid
                       </span>
                     )}
                   </td>

@@ -275,7 +275,7 @@ function RegisterPage() {
           <div className="register-header">
 
             <div className="register-logo">
-              🏥
+              H
             </div>
 
             <h2 className="register-title">

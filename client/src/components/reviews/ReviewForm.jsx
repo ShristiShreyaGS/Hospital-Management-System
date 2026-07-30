@@ -244,10 +244,11 @@ function ReviewForm({ reviewToEdit, onClose }) {
                   width: '40px', height: '40px',
                   background: star <= formData.rating ? '#f39c12' : '#ecf0f1',
                   border: 'none', borderRadius: '4px',
-                  fontSize: '20px', cursor: 'pointer',
-                  color: star <= formData.rating ? 'white' : '#bdc3c7'
+                  fontSize: '14px', cursor: 'pointer',
+                  color: star <= formData.rating ? 'white' : '#7f8c8d',
+                  fontWeight: '600'
                 }}>
-                ★
+                {star}
               </button>
             ))}
             <span style={{ alignSelf: 'center', color: '#7f8c8d', fontSize: '14px' }}>

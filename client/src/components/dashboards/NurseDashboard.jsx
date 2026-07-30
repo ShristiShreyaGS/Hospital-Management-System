@@ -66,8 +66,8 @@ function NurseDashboard() {
         <h3 style={{ color: '#2c3e50', marginBottom: '16px' }}>Quick Actions</h3>
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
           {[
-            { label: '👥 View Patients', path: '/patients', color: '#2980b9' },
-            { label: '🛏 Admissions', path: '/admissions', color: '#27ae60' },
+            { label: 'View Patients', path: '/patients', color: '#2980b9' },
+            { label: 'Admissions', path: '/admissions', color: '#27ae60' },
           ].map((action) => (
             <button key={action.label} onClick={() => navigate(action.path)} style={{
               padding: '10px 20px', background: action.color,
@@ -83,7 +83,7 @@ function NurseDashboard() {
         background: 'white', borderRadius: '8px',
         padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
       }}>
-        <h3 style={{ color: '#e74c3c', marginBottom: '16px' }}>⚠️ Critical Patients</h3>
+        <h3 style={{ color: '#e74c3c', marginBottom: '16px' }}>Critical Patients</h3>
         {critical.length === 0 ? (
           <p style={{ color: '#7f8c8d', textAlign: 'center', padding: '20px' }}>
             No critical patients

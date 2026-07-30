@@ -15,7 +15,7 @@ function AppointmentForm({ appointmentToEdit, onClose }) {
     appointmentDate: '',
     appointmentTime: '',
     reason: '',
-    status: 'Scheduled',   // ✅ fixed
+    status: 'Scheduled',
   })
 
   useEffect(() => {
@@ -30,7 +30,7 @@ function AppointmentForm({ appointmentToEdit, onClose }) {
         appointmentDate: appointmentToEdit.appointmentDate?.split('T')[0] || '',
         appointmentTime: appointmentToEdit.appointmentTime || '',
         reason: appointmentToEdit.reason || '',
-        status: appointmentToEdit.status || 'Scheduled',  // ✅ fixed
+        status: appointmentToEdit.status || 'Scheduled',
       })
     }
   }, [appointmentToEdit])
@@ -98,10 +98,10 @@ function AppointmentForm({ appointmentToEdit, onClose }) {
             <label style={labelStyle}>Status</label>
             <select name="status" value={formData.status}
               onChange={handleChange} style={inputStyle}>
-              <option value="Scheduled">Scheduled</option>      {/* ✅ fixed */}
-              <option value="Completed">Completed</option>      {/* ✅ fixed */}
-              <option value="Cancelled">Cancelled</option>      {/* ✅ fixed */}
-              <option value="No Show">No Show</option>          {/* ✅ fixed */}
+              <option value="Scheduled">Scheduled</option>
+              <option value="Completed">Completed</option>
+              <option value="Cancelled">Cancelled</option>
+              <option value="No Show">No Show</option>
             </select>
             <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
               <button type="submit" style={{
@@ -192,10 +192,10 @@ function AppointmentForm({ appointmentToEdit, onClose }) {
               <label style={labelStyle}>Status</label>
               <select name="status" value={formData.status}
                 onChange={handleChange} style={inputStyle}>
-                <option value="Scheduled">Scheduled</option>    {/* ✅ fixed */}
-                <option value="Completed">Completed</option>    {/* ✅ fixed */}
-                <option value="Cancelled">Cancelled</option>    {/* ✅ fixed */}
-                <option value="No Show">No Show</option>        {/* ✅ fixed */}
+                <option value="Scheduled">Scheduled</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+                <option value="No Show">No Show</option>
               </select>
             </>
           )}

@@ -90,7 +90,7 @@ function Navbar() {
         fontSize: '20px', fontWeight: '700',
         letterSpacing: '1px'
       }}>
-        🏥 HMS
+        HMS
       </Link>
 
       {/* Middle — Nav Links */}
@@ -119,7 +119,7 @@ function Navbar() {
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
         {user && (
           <span style={{ fontSize: '14px', color: 'rgba(255,255,255,0.85)' }}>
-            👤 {user.name} — <span style={{
+            {user.name} - <span style={{
               background: 'rgba(255,255,255,0.15)',
               padding: '2px 8px',
               borderRadius: '10px',

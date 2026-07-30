@@ -51,7 +51,19 @@ const NotificationBell = () => {
   return (
     <div className="notification-bell-container" ref={dropdownRef}>
       <div className="bell-icon-wrapper" onClick={() => setShowDropdown(!showDropdown)}>
-        <span className="bell-icon">🔔</span>
+        <svg
+          className="bell-icon"
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          aria-label="Notifications"
+          role="img"
+        >
+          <path
+            d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-5h-1V10a6 6 0 1 0-12 0v7H5a1 1 0 0 0 0 2h14a1 1 0 1 0 0-2Z"
+            fill="currentColor"
+          />
+        </svg>
         {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
       </div>
 
@@ -89,7 +101,7 @@ const NotificationBell = () => {
                     className="delete-btn"
                     onClick={(e) => handleDelete(e, notification._id)}
                   >
-                    ✕
+                    Delete
                   </button>
                 </div>
               ))
