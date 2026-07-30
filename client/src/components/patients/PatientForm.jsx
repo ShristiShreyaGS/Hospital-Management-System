@@ -6,7 +6,7 @@ function PatientForm({ patientToEdit, onClose }) {
   const dispatch = useDispatch()
 
   const [formData, setFormData] = useState({
-    userId: '',
+    userEmail: '',
     age: '',
     gender: '',
     bloodGroup: '',
@@ -20,7 +20,7 @@ function PatientForm({ patientToEdit, onClose }) {
   useEffect(() => {
     if (patientToEdit) {
       setFormData({
-        userId: patientToEdit.userId?._id || '',
+        userEmail: '',
         age: patientToEdit.age || '',
         gender: patientToEdit.gender || '',
         bloodGroup: patientToEdit.bloodGroup || '',
@@ -39,10 +39,21 @@ function PatientForm({ patientToEdit, onClose }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    const payload = {
+      age: formData.age,
+      gender: formData.gender,
+      bloodGroup: formData.bloodGroup,
+      allergies: formData.allergies,
+      address: formData.address,
+      contactNumber: formData.contactNumber,
+      emergencyContact: formData.emergencyContact,
+      currentHealthStatus: formData.currentHealthStatus,
+    }
+
     if (patientToEdit) {
-      dispatch(updatePatient({ id: patientToEdit._id, data: formData }))
+      dispatch(updatePatient({ id: patientToEdit._id, data: payload }))
     } else {
-      dispatch(createPatient(formData))
+      dispatch(createPatient({ ...payload, userEmail: formData.userEmail }))
     }
     onClose()
   }
@@ -82,17 +93,20 @@ function PatientForm({ patientToEdit, onClose }) {
 
         <form onSubmit={handleSubmit}>
 
-          {/* User ID */}
-          <label style={labelStyle}>User ID</label>
-          <input
-            type="text"
-            name="userId"
-            value={formData.userId}
-            onChange={handleChange}
-            placeholder="Paste registered user ID here"
-            required
-            style={inputStyle}
-          />
+          {!patientToEdit && (
+            <>
+              <label style={labelStyle}>Patient Email</label>
+              <input
+                type="email"
+                name="userEmail"
+                value={formData.userEmail}
+                onChange={handleChange}
+                placeholder="Enter registered patient email"
+                required
+                style={inputStyle}
+              />
+            </>
+          )}
 
           {/* Age */}
           <label style={labelStyle}>Age</label>

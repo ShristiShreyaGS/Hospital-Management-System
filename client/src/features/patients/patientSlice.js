@@ -110,12 +110,14 @@ const patientSlice = createSlice({
       })
       // Create
       .addCase(createPatient.fulfilled, (state, action) => {
-        state.patients.push(action.payload)
+        const createdPatient = action.payload?.patient || action.payload
+        state.patients.push(createdPatient)
       })
       // Update
       .addCase(updatePatient.fulfilled, (state, action) => {
-        const index = state.patients.findIndex(p => p._id === action.payload._id)
-        if (index !== -1) state.patients[index] = action.payload
+        const updatedPatient = action.payload?.patient || action.payload
+        const index = state.patients.findIndex(p => p._id === updatedPatient._id)
+        if (index !== -1) state.patients[index] = updatedPatient
       })
       // Delete
       .addCase(deletePatient.fulfilled, (state, action) => {

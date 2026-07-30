@@ -1,4 +1,5 @@
 const Patient = require('../models/Patient');
+const User = require('../models/User');
 
 // Get current user's patient profile
 const getMyProfile = async (req, res) => {
@@ -16,15 +17,40 @@ const getMyProfile = async (req, res) => {
 // Add new patient
 const addPatient = async (req, res) => {
   try {
-    const { userId, age, gender, bloodGroup, allergies, address, emergencyContact, contactNumber, currentHealthStatus } = req.body;
+    const { userId, userEmail, age, gender, bloodGroup, allergies, address, emergencyContact, contactNumber, currentHealthStatus } = req.body;
 
-    const patientExists = await Patient.findOne({ userId });
+    let resolvedUserId = userId;
+
+    if (!resolvedUserId && userEmail) {
+      const user = await User.findOne({ email: userEmail.toLowerCase() }).select('_id role');
+      if (!user) {
+        return res.status(404).json({ message: 'No user found with this email' });
+      }
+      if (user.role !== 'patient') {
+        return res.status(400).json({ message: 'Selected user is not a patient account' });
+      }
+      resolvedUserId = user._id;
+    }
+
+    if (!resolvedUserId) {
+      return res.status(400).json({ message: 'Patient account is required' });
+    }
+
+    const linkedUser = await User.findById(resolvedUserId).select('_id role');
+    if (!linkedUser) {
+      return res.status(404).json({ message: 'Patient account not found' });
+    }
+    if (linkedUser.role !== 'patient') {
+      return res.status(400).json({ message: 'Selected account must have patient role' });
+    }
+
+    const patientExists = await Patient.findOne({ userId: resolvedUserId });
     if (patientExists) {
       return res.status(400).json({ message: 'Patient already exists' });
     }
 
     const patient = await Patient.create({
-      userId,
+      userId: resolvedUserId,
       age,
       gender,
       bloodGroup,
