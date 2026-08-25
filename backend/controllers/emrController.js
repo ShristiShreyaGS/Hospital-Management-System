@@ -55,6 +55,32 @@ const addEMR = async (req, res) => {
         path: 'doctorId',
         populate: { path: 'userId', select: 'name email' }
       });
+    // If prescriptions were included in the EMR, create individual Prescription documents
+    try {
+      const Prescription = require('../models/Prescription');
+      if (Array.isArray(emr.prescription) && emr.prescription.length > 0) {
+        const patientId = populatedEMR.patientId?._id || emr.patientId;
+        const doctorId = populatedEMR.doctorId?._id || emr.doctorId;
+        const createOps = emr.prescription
+          .filter(p => p.medicine)
+          .map(p => ({
+            patientId,
+            doctorId,
+            emrId: emr._id,
+            medicine: p.medicine,
+            dosage: p.dosage || '',
+            frequency: p.frequency || '',
+            duration: p.duration || '',
+            instructions: p.instructions || ''
+          }));
+        if (createOps.length > 0) {
+          await Prescription.insertMany(createOps);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to create prescription documents for EMR:', err.message);
+    }
+
     res.status(201).json({ message: 'EMR created successfully', emr: populatedEMR });
   } catch (error) {
     console.error('Error creating EMR:', error);
