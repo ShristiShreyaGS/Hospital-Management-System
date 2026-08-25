@@ -269,7 +269,7 @@ function PatientDashboard() {
                 },
                 {
                   label: 'View Prescriptions',
-                  path: '/pharmacy',
+                  path: '/emr',
                 },
                 {
                   label: 'View My Bills',
