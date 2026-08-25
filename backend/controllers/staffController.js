@@ -68,6 +68,23 @@ const getStaffByDepartment = async (req, res) => {
   }
 };
 
+// Get current logged-in user's staff profile
+const getMyStaffProfile = async (req, res) => {
+  try {
+    const staff = await Staff.findOne({ userId: req.user.id })
+      .populate('userId', 'name email')
+      .populate('department', 'name');
+
+    if (!staff) {
+      return res.status(404).json({ message: 'Staff profile not found' });
+    }
+
+    res.status(200).json(staff);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Update staff
 const updateStaff = async (req, res) => {
   try {
@@ -126,6 +143,7 @@ module.exports = {
   getAllStaff,
   getStaffById,
   getStaffByDepartment,
+  getMyStaffProfile,
   updateStaff,
   deleteStaff
 };

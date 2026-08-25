@@ -5,6 +5,7 @@ const {
   getAllStaff,
   getStaffById,
   getStaffByDepartment,
+  getMyStaffProfile,
   updateStaff,
   deleteStaff
 } = require('../controllers/staffController');
@@ -16,6 +17,7 @@ router.use(protect);
 
 router.post('/', authorize('admin'), addStaff);
 router.get('/', authorize('admin', 'receptionist', 'doctor', 'nurse', 'patient'), getAllStaff);
+router.get('/me', authorize('admin', 'doctor', 'receptionist', 'nurse', 'lab_staff', 'pharmacist'), getMyStaffProfile);
 router.get('/:id', authorize('admin', 'receptionist', 'doctor', 'nurse', 'patient'), getStaffById);
 router.get('/department/:departmentId', authorize('admin', 'receptionist'), getStaffByDepartment);
 router.put('/:id', authorize('admin', 'receptionist', 'nurse', 'lab_staff', 'pharmacist'), updateStaff);

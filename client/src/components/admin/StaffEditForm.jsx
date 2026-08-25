@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUserProfile } from '../../features/auth/authSlice'
-import { updateStaff, getStaff } from '../../features/staff/staffSlice'
+import { updateStaff, getMyStaffProfile } from '../../features/staff/staffSlice'
 
 function StaffEditForm({ staffId }) {
   const dispatch = useDispatch()
@@ -109,8 +109,8 @@ function StaffEditForm({ staffId }) {
 
       await dispatch(updateStaff({ id: staffId, data: staffSubmitData })).unwrap()
 
-      // Refetch staff data to ensure persistence
-      await dispatch(getStaff())
+      // Refetch only current user's staff profile to avoid role-based /staff restrictions
+      await dispatch(getMyStaffProfile())
 
       setMessage('Profile updated successfully!')
       setFormData({
