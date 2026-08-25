@@ -1,4 +1,7 @@
 const EMR = require('../models/EMR');
+const Patient = require('../models/Patient');
+const Doctor = require('../models/Doctor');
+const Staff = require('../models/Staff');
 
 const addEMR = async (req, res) => {
   try {
@@ -61,16 +64,29 @@ const addEMR = async (req, res) => {
 
 const getAllEMRs = async (req, res) => {
   try {
-    const emrs = await EMR.find()
-      .populate({
-        path: 'patientId',
-        populate: { path: 'userId', select: 'name email' }
-      })
-      .populate({
-        path: 'doctorId',
-        populate: { path: 'userId', select: 'name email' }
-      });
-    res.status(200).json(emrs);
+    let emrs;
+    // Patients should only see their own EMRs
+    if (req.user.role === 'patient') {
+      const patient = await Patient.findOne({ userId: req.user.id });
+      if (!patient) return res.status(404).json({ message: 'Patient profile not found' });
+      emrs = await EMR.find({ patientId: patient._id });
+    } else if (req.user.role === 'doctor') {
+      // Doctors should only see EMRs they authored / assigned to them
+      const doctor = await Doctor.findOne({ userId: req.user.id });
+      if (!doctor) return res.status(404).json({ message: 'Doctor profile not found' });
+      emrs = await EMR.find({ doctorId: doctor._id });
+    } else if (req.user.role === 'admin' || req.user.role === 'nurse' || req.user.role === 'pharmacist' || req.user.role === 'lab_staff') {
+      // Admin and certain staff roles can view all EMRs
+      emrs = await EMR.find();
+    } else {
+      return res.status(403).json({ message: 'Not authorized to view EMRs' });
+    }
+
+    const populated = await EMR.populate(emrs, [
+      { path: 'patientId', populate: { path: 'userId', select: 'name email' } },
+      { path: 'doctorId', populate: { path: 'userId', select: 'name email' } }
+    ]);
+    res.status(200).json(populated);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -78,19 +94,40 @@ const getAllEMRs = async (req, res) => {
 
 const getEMRById = async (req, res) => {
   try {
+    // populate patient.userId early to compare against the authenticated user
     const emr = await EMR.findById(req.params.id)
-      .populate({
-        path: 'patientId',
-        populate: { path: 'userId', select: 'name email' }
-      })
-      .populate({
-        path: 'doctorId',
-        populate: { path: 'userId', select: 'name email' }
-      });
-    if (!emr) {
-      return res.status(404).json({ message: 'EMR not found' });
+      .populate({ path: 'patientId', populate: { path: 'userId', select: 'name email' } })
+      .populate({ path: 'doctorId', populate: { path: 'userId', select: 'name email' } });
+
+    if (!emr) return res.status(404).json({ message: 'EMR not found' });
+
+    // Admins can view any EMR
+    if (req.user.role === 'admin') return res.status(200).json(emr);
+
+    // Patients can view only their own EMRs (compare patient.userId)
+    if (req.user.role === 'patient') {
+      const patientUserId = emr.patientId?.userId?._id?.toString() || emr.patientId?.userId?.toString();
+      if (!patientUserId || patientUserId !== req.user.id) {
+        return res.status(403).json({ message: 'Not authorized to view this EMR' });
+      }
+      return res.status(200).json(emr);
     }
-    res.status(200).json(emr);
+
+    // Doctors can view EMRs where they are the assigned doctor
+    if (req.user.role === 'doctor') {
+      const doctor = await Doctor.findOne({ userId: req.user.id });
+      if (!doctor || doctor._id.toString() !== emr.doctorId?._id?.toString()) {
+        return res.status(403).json({ message: 'Not authorized to view this EMR' });
+      }
+      return res.status(200).json(emr);
+    }
+
+    // Allow other staff roles (nurse, pharmacist, lab_staff) to view EMRs — adjust if you need department scoping
+    if (['nurse', 'pharmacist', 'lab_staff'].includes(req.user.role)) {
+      return res.status(200).json(emr);
+    }
+
+    return res.status(403).json({ message: 'Not authorized to view this EMR' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -98,16 +135,37 @@ const getEMRById = async (req, res) => {
 
 const getEMRByPatient = async (req, res) => {
   try {
-    const emrs = await EMR.find({ patientId: req.params.patientId })
-      .populate({
-        path: 'patientId',
-        populate: { path: 'userId', select: 'name email' }
-      })
-      .populate({
-        path: 'doctorId',
-        populate: { path: 'userId', select: 'name email' }
-      });
-    res.status(200).json(emrs);
+    // Only allow patient to fetch their own EMRs, doctors for their patients, and certain staff/admin
+    const targetPatient = await Patient.findById(req.params.patientId);
+    if (!targetPatient) return res.status(404).json({ message: 'Patient not found' });
+
+    if (req.user.role === 'patient') {
+      const patient = await Patient.findOne({ userId: req.user.id });
+      if (!patient || patient._id.toString() !== targetPatient._id.toString()) {
+        return res.status(403).json({ message: 'Not authorized to view this patient EMRs' });
+      }
+    } else if (req.user.role === 'doctor') {
+      const doctor = await Doctor.findOne({ userId: req.user.id });
+      if (!doctor) return res.status(404).json({ message: 'Doctor profile not found' });
+      // Only EMRs for this patient that the doctor authored
+      const emrs = await EMR.find({ patientId: req.params.patientId, doctorId: doctor._id });
+      const populated = await EMR.populate(emrs, [
+        { path: 'patientId', populate: { path: 'userId', select: 'name email' } },
+        { path: 'doctorId', populate: { path: 'userId', select: 'name email' } }
+      ]);
+      return res.status(200).json(populated);
+    } else if (req.user.role === 'admin' || req.user.role === 'nurse' || req.user.role === 'pharmacist' || req.user.role === 'lab_staff') {
+      // allowed to view all EMRs for the patient
+    } else {
+      return res.status(403).json({ message: 'Not authorized to view this patient EMRs' });
+    }
+
+    const emrs = await EMR.find({ patientId: req.params.patientId });
+    const populated = await EMR.populate(emrs, [
+      { path: 'patientId', populate: { path: 'userId', select: 'name email' } },
+      { path: 'doctorId', populate: { path: 'userId', select: 'name email' } }
+    ]);
+    res.status(200).json(populated);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
